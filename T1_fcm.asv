@@ -1,0 +1,26 @@
+function [mask0 mask1 mask2] = T1_fcm(theDipData)
+
+num_clusters = 3;
+
+dipSizes = size(theDipData);
+sizes    = size(double(theDipData));
+intData  = reshape(double(theDipData), [prod(sizes) 1]);
+
+[center, U, obj_fun] = fcm(intData, num_clusters);
+maxU = max(U);
+disp('size U -> ');
+size(U)
+
+%mask0 = newim(dipSizes);
+%mask1 = newim(dipSizes);
+%mask2 = newim(dipSizes);
+
+masks = newim([dipSizes num_clusters]);
+
+%mask0 = dip_image(reshape(U(1,:) == maxU, sizes), 'uint8');
+%mask1 = dip_image(reshape(U(2,:) == maxU, sizes), 'uint8');
+%mask2 = dip_image(reshape(U(3,:) == maxU, sizes), 'uint8');
+
+for c = 1:num_clusters
+    masks(:,:,:,:,c) =
+end

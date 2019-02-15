@@ -1,0 +1,17 @@
+frontal_grey = readcollection('t:\perfusion\masks\pt3\frontal_grey.msk','uint8',512,1024,1);
+parietal_grey = readcollection('t:\perfusion\masks\pt3\parietal_grey.msk','uint8',512,1024,1);
+occipital_grey = readcollection('t:\perfusion\masks\pt3\occipital_grey.msk','uint8',512,1024,1);
+sylvian_grey = readcollection('t:\perfusion\masks\pt3\sylvian_grey.msk','uint8',512,1024,1);
+thalamus = readcollection('t:\perfusion\masks\pt3\thalami.msk','uint8',512,1024,1);
+putamen = readcollection('t:\perfusion\masks\pt3\putamen.msk','uint8',512,1024,1);
+midbrain = readcollection('t:\perfusion\masks\pt3\midbrain.msk','uint8',512,1024,1);
+head_caudate = readcollection('t:\perfusion\masks\pt3\head_caudate.msk','uint8',512,1024,1);
+frontal_white = readcollection('t:\perfusion\masks\pt3\frontal_white.msk','uint8',512,1024,1);
+parietal_white = readcollection('t:\perfusion\masks\pt3\parietal_white.msk','uint8',512,1024,1);
+occipital_white = readcollection('t:\perfusion\masks\pt3\occipital_white.msk','uint8',512,1024,1);
+genu = readcollection('t:\perfusion\masks\pt3\genu.msk','uint8',512,1024,1);
+post_limb = readcollection('t:\perfusion\masks\pt3\post_limb.msk','uint8',512,1024,1);
+callosum = readcollection('t:\perfusion\masks\pt3\callosum.msk','uint8',512,1024,1);
+csf = readcollection('t:\perfusion\masks\pt3\csf.msk','uint8',512,1024,1);
+lhs = readcollection('t:\perfusion\masks\pt3\lhs.msk','uint8',512,1024,1);
+rhs = readcollection('t:\perfusion\masks\pt3\rhs.msk','uint8',512,1024,1);

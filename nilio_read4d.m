@@ -1,0 +1,110 @@
+%NILIO_READ4DFP reads floating-point data in Avi Snyder's 4dfp-format
+%
+% SYNOPSIS:
+%  image_out = nilio_read4d(filename, endian, type, dim1, dim2, dim3, dim4, offset4)
+%
+% NOTES:
+%  resulting image tensor will yield images in radiologic convention when
+%  viewed with DIPimage
+%
+%  possible types...
+%     bin          <-> bin8, bin16, bin32
+%     sfloat       <-> float, single
+%     dfloat       <-> double
+%     scomplex
+%     dcomplex     <-> complex
+%
+% PARAMETERS:
+%  filename               - string with name of file
+%  endian                 - native, ieee-le, or ieee-be
+%  type                   - string identifying the data type
+%  dim1, dim2, dim3, dim4 - integers expected by dipimage function newim
+%  offset4                - number of dim4 frames to skip
+%
+% $Author$
+% $Date$
+% $Revision$
+% $Source$
+
+function image_out = nilio_read4d(filename, endian, type, Dim1, Dim2, Dim3, Dim4, Offset4, varargin)
+
+% private parameters
+Verbose = 0;
+StructImg = [Dim1, Dim2];
+
+% check for silly inputs
+if (strcmp('', filename)) error('nilio_read4d:  oops... missing filename'); end
+if (~strcmp('bin', type) & ...
+        ~strcmp('bin8', type) & ...
+        ~strcmp('bin16', type) & ...
+        ~strcmp('bin32', type) & ...
+        ~strcmp('uint8', type) & ...
+        ~strcmp('uint16', type) & ...
+        ~strcmp('uint32', type) & ...
+        ~strcmp('uint', type) & ...
+        ~strcmp('sint8', type) & ...
+        ~strcmp('int8', type) & ...
+        ~strcmp('sint16', type) & ...
+        ~strcmp('int16', type) & ...
+        ~strcmp('sint32', type) & ...
+        ~strcmp('int', type) & ...
+        ~strcmp('int32', type) & ...
+        ~strcmp('sfloat', type) & ...
+        ~strcmp('float', type) & ...
+        ~strcmp('single', type) & ...
+        ~strcmp('dfloat', type) & ...
+        ~strcmp('double', type) & ...
+        ~strcmp('scomplex', type) & ...
+        ~strcmp('dcomplex', type) & ...
+        ~strcmp('complex', type) ...
+        ) error('nilio_read4d:  oops... unrecognized data type'); end
+if (Dim1 < 0), error('nilio_read4d:  oops... Dim1 < 0'); end
+if (Dim2 < 0), error('nilio_read4d:  oops... Dim2 < 0'); end
+if (Dim3 < 0), error('nilio_read4d:  oops... Dim3 < 0'); end
+if (Dim4 < 0), error('nilio_read4d:  oops... Dim4 < 0'); end
+if (Offset4 < 0), error('nilio_read4d:  oops... Offset4 < 0'); end
+
+image_out = newim(Dim1, Dim2, Dim3, Dim4);   % expected by function dip_image;
+% Dims may be singletons
+if (nargin > 8 && varargin(1))
+    disp(['nilio_read4d will read ' filename]); end
+[fid, message] = fopen(filename, 'r', endian);
+if (fid < 0 && Verbose)
+    disp(['fid -> ' num2str(fid) ', file -> ' filename ', message -> ' message]); end
+
+if (Offset4 == 1)
+    disp(['   skipping indices -> (:,:,:,0)']);
+elseif (Offset4 > 1)
+    disp(['   skipping indices -> (:,:,:,0:' int2str(Offset4-1) ')']);
+end
+for j0 = 0:Offset4-1
+    for k = 0:Dim3-1
+        try
+            image_raw = fread(fid, StructImg, type);
+        catch
+            if Verbose, 
+				error('nilio_read4d:  oops... fread failed'); end
+        end
+    end
+end
+
+% collect the image
+for j = 0:Dim4-1
+    % disp(['   freading indices -> (:,:,:,' int2str(Offset4+j) ')']);
+    for k = 0:Dim3-1
+        try
+            image_raw = fread(fid, StructImg, type);
+        catch
+            if Verbose, 
+				error('nilio_read4d:  oops... fread failed'); end
+        end
+        try
+            image_out(:,:,k,j) = dip_image(image_raw', type);   % transpose needed for matlab -> dipimage conversion
+        catch
+            if Verbose, 
+				error('nilio_read4d:  oops... Matlab -> DIPimage conversion failed'); end
+        end
+    end
+end
+
+fclose(fid);

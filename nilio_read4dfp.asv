@@ -1,0 +1,74 @@
+%NILIO_READ4DFP  read floating-point data in Avi Snyder's 4dfp-format
+%
+% SYNOPSIS:
+%  image_out = nilio_read4dfp(filename, endian, type, dim1, dim2, dim3, dim4)
+%
+% NOTES:
+%
+%  possible types...
+%     bin          <-> bin8, bin16, bin32
+%     sfloat       <-> float, single
+%     dfloat       <-> double
+%     scomplex
+%     dcomplex     <-> complex
+%
+% PARAMETERS:
+%  filename               - string with name of file
+%  endian                 - native, ieee-le, or ieee-be
+%  type                   - string identifying the data type
+%  dim1, dim2, dim3, dim4 - integers expected by dipimage function newim
+%
+% $Author$
+% $Date$
+% $Revision$
+% $Source$
+
+function image_out = nilio_read4dfp(filename, endian, type, Dim1, Dim2, Dim3, Dim4)
+
+  % private parameters
+  Verbose = 0;
+  StructImg = [Dim1, Dim2];
+
+  % check for silly inputs
+  if (strcmp('', filename)) error('oops... missing filename'); end
+  if (~strcmp('bin', type) & ... 
+      ~strcmp('bin8', type) & ...
+      ~strcmp('bin16', type) & ...
+      ~strcmp('bin32', type) & ...
+      ~strcmp('sfloat', type) & ...      
+      ~strcmp('float', type) & ...      
+      ~strcmp('single', type) & ...      
+      ~strcmp('dfloat', type) & ...      
+      ~strcmp('double', type) & ...      
+      ~strcmp('scomplex', type) & ...      
+      ~strcmp('dcomplex', type) & ...      
+      ~strcmp('complex', type) ...
+      ) error('oops... unrecognized data type'); end
+  if (Dim1 < 0) error('oops... Dim1 < 0'); end
+  if (Dim2 < 0) error('oops... Dim2 < 0'); end
+  if (Dim3 < 0) error('oops... Dim3 < 0'); end
+  if (Dim4 < 0) error('oops... Dim4 < 0'); end
+  
+  % read raw binary data
+  image_out = newim(Dim1, Dim2, Dim3, Dim4);   % expected by function dip_image; 
+                                               % Dims may be singletons
+  
+  fid = fopen(filename, 'r', endian);
+  for j = 0:Dim4-1
+      for k = 0:Dim3-1
+          if (Dim3 > 1 & Dim4 > 1)
+              disp(['   freading indices -> (:,:,' int2str(k) ',' int2str(j) ')']);
+          end
+          try
+              image_raw = fread(fid, StructImg, type);
+          catch
+              error('   sorry... fread failed');
+          end
+          try
+              image_out(:,:,k,j) = dip_image(image_raw', type); %
+          catch
+              error('oops... dip_image conversion failed');
+          end
+      end
+  end
+  fclose(fid);

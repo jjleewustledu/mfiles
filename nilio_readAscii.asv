@@ -1,0 +1,53 @@
+%NILIO_READ4DFP reads floating-point data in Avi Snyder's 4dfp-format
+%
+% SYNOPSIS:
+%  image_out = nilio_readAscii(filename, endian, type, dim1, dim2, dim3, dim4)
+%
+% NOTES:
+%  resulting image tensor will yield images in radiologic convention when
+%  viewed with DIPimage
+%
+%  possible types...
+%     bin          <-> bin8, bin16, bin32
+%     sfloat       <-> float, single
+%     dfloat       <-> double
+%     scomplex
+%     dcomplex     <-> complex
+%
+% PARAMETERS:
+%  filename               - string with name of file
+%  Dim1, Dim2, dim3, dim4 - 4dfp dimen
+%
+% $Author$
+% $Date$
+% $Revision$
+% $Source$
+
+function dip_out = nilio_readAscii(filename, Dim1, Dim2, Dim3, Dim4)
+
+  disp('entering nilio_readAscii');
+  
+  % private parameters
+  Verbose = 0;
+
+  % check for silly inputs
+  if (strcmp('', filename)) error('nilio_read4d:  oops... missing filename'); end
+  if (Dim1 < 0) error('nilio_read4d:  oops... Dim1 < 0'); end
+  if (Dim2 < 0) error('nilio_read4d:  oops... Dim2 < 0'); end
+  if (Dim3 < 0) error('nilio_read4d:  oops... Dim3 < 0'); end
+  if (Dim4 < 0) error('nilio_read4d:  oops... Dim4 < 0'); end
+  
+  arr1d = zeros(Dim1*Dim2*Dim3*Dim4, 1);
+  arr1d = dlmread(filename, '');
+  mat4d = reshape(arr1d, [Dim1 Dim2 Dim3 Dim4]);
+ 
+  mat2d = zeros(Dim1, Dim2);
+  for p = 1:Dim3
+      for q = 1:Dim4
+        mat2d = mat4d(:,:,p,q);
+        mat4d(:,:,p,q) = mat2d';
+      end
+  end
+  
+  dip_out = rotation(dip_image(mat4d), pi);
+

@@ -1,0 +1,63 @@
+% NILIO_WRITE4DFP writes 4dfp objects from Matlab to file systems
+%
+% USAGE: nilio_write4dfp(object, endian, filename)
+%
+% SEE ALSO:
+%     nilio_read4dfp
+%
+% PARAMETERS:
+%  object    - 4dfp object from Matlab
+%  endian   - native, ieee-le, or ieee-be
+%  filename - string with name of file
+%
+% $Author: jjlee $
+% $Date: 2003/10/23 03:27:30 $
+% $Revision: 1.2 $
+% $Source: /cygdrive/c/local/dipimage-23jun2003/local/RCS/nilio_writecollection.m,v $
+
+
+function nilio_write4dfp(object, endian, filename)
+
+  DataType= 'single';
+  dims = size(object);
+  
+  % check for silly inputs
+  try
+      if 
+  catch
+      error('oops... 4dfp object does not have 4 dimensions');
+  end
+  if (~strcmp('ieee-be', endian) & ... 
+      ~strcmp('ieee-le', endian) & ...
+      ~strcmp('native', endian) & ...      
+      ) error('oops... unrecognized data endian'); end
+  if (strcmp('', filename)) error('oops... missing filename'); end
+  
+
+  subobject = newim(dims(1), dims(2));
+
+  fid = fopen(filename, 'w+', endian);
+  for j = 0:dims(4)-1
+      for k = 0:dims(3)-1
+          if (dims(3) > 1 & dims(4) > 1)
+              disp(['   fwriting indices -> (:,:,' int2str(k) ',' int2str(j) ')']);
+          end
+          try
+              subobject = 
+              
+              image_out(:,:,k,j) = dip_image(image_raw', type);   % transpose needed for matlab -> dipimage conversion
+          catch
+              error('oops... dip_image conversion failed');
+          end
+          try
+              fwrite(fid, double(subobject'), DataType);
+          catch
+              error('   sorry... fwrite failed');
+          end
+          
+      end
+  end
+  fclose(fid);
+  
+
+  

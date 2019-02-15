@@ -7,7 +7,7 @@ function lt = locationType(varargin)
 %% Developed on Matlab 9.1.0.441655 (R2016b).  Copyright 2017 John Joowon Lee. 
 %% $Id$ 
 
-lt = mlfourd.ImagingContext.locationType(varargin{:});
+lt = mlfourd.ImagingContext2.locationType(varargin{:});
 
 
 

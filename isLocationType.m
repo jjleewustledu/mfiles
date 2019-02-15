@@ -7,7 +7,7 @@ function tf = isLocationType(varargin)
 %% Developed on Matlab 9.1.0.441655 (R2016b) 
 %% $Id$ 
 
-tf = mlfourd.ImagingContext.isLocationType;
+tf = mlfourd.ImagingContext2.isLocationType;
 
 
 

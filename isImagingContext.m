@@ -7,9 +7,13 @@ function tf = isImagingContext(obj)
 %% Developed on Matlab 9.0.0.307022 (R2016a) Prerelease 
 %% $Id$ 
 
-tf = isa(obj, 'mlfourd.ImagingContext') || ...
-     isa(obj, 'mlpet.PETImagingContext') || ...
-     isa(obj, 'mlmr.MRImagingContext');
+if (~isdeployed)
+    tf = isa(obj, 'mlfourd.ImagingContext') || ...
+         isa(obj, 'mlpet.PETImagingContext') || ...
+         isa(obj, 'mlmr.MRImagingContext');
+else
+    tf = isa(obj, 'mlfourd.ImagingContext2');
+end
 
 
 

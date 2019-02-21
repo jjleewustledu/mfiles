@@ -28,25 +28,25 @@ function [s,r] = mlbash(cmdline, varargin)
         if (~isempty(ip.Results.diaryFilename))
             [s,r] = mlbashDiary(cmdline, ip.Results.diaryFilename);
             if (s ~= 0)
-                warning('mfiles:ChildProcessError', 'mlbash:\n%s\nreturned s->%i\n%s', cmdline, s, r);
+                error('mfiles:ChildProcessError', 'mlbash:\n%s\nreturned s->%i\n%s', cmdline, s, r);
             end
             return
         end
         if (~isempty(ip.Results.logger))
             [s,r] = mlbashLogger(cmdline, ip.Results.logger);
             if (s ~= 0)
-                warning('mfiles:ChildProcessError', 'mlbash:\n%s\nreturned s->%i\n%s', cmdline, s, r);
+                error('mfiles:ChildProcessError', 'mlbash:\n%s\nreturned s->%i\n%s', cmdline, s, r);
             end
             return
         end
         
         if (~ip.Results.echo)
-            [s,r] = unix(cmdline);
+            [s,r] = system(cmdline);
         else
-            [s,r] = unix(cmdline, '-echo');
+            [s,r] = system(cmdline, '-echo');
         end
         if (s ~= 0)
-            warning('mfiles:ChildProcessError', 'mlbash:\n%s\nreturned s->%i\n%s', cmdline, s, r);
+            error('mfiles:ChildProcessError', 'mlbash:\n%s\nreturned s->%i\n%s', cmdline, s, r);
         end        
         if (mlpipeline.PipelineRegistry.instance.verbose)
             fprintf('mlbash:\n%s\nreturned s->%i\n%s', cmdline, s, r);

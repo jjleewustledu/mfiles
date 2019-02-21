@@ -11,7 +11,7 @@ function [s,r] = mlbashDiary(cmdline, diaryfn)
     parse(ip, cmdline, diaryfn);
 
     diary(diaryfn);
-    [s,r] = unix(cmdline);
+    [s,r] = system(cmdline);
     fprintf('mlbashDiary.cmdline:\n%s\n', cmdline);
     fprintf('mlbashDiary.s:  %i\n', s);
     fprintf('mlbashDiary.r:\n%s\n', r);

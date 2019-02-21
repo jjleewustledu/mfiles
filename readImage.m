@@ -123,11 +123,11 @@ function imgDat = readImage(imgDat, imgTag)
         iqCBF = -1; iqCBV = -1;
         load(filenameMat(imgDat.pid));
         disp('image_names:');
-        for i = 1:length(image_names)
+        for i = 1:length(image_names) %#ok<*USENS>
             if (i < 10) spacer = '      ';
             else        spacer = '     ';
             end
-            disp([num2str(i) spacer image_names{i}]);
+            disp([num2str(i) spacer image_names{i}]); %#ok<*IDISVAR>
             if (strcmp('qCBF_nSVD', image_names{i}))
                 iqCBF = i; end
             if (strcmp('qCBV_DSC', image_names{i}))

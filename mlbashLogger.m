@@ -10,7 +10,7 @@ function [s,r] = mlbashLogger(cmdline, logger)
     addRequired( ip, 'logger', @(x) isa(x, 'mlpipeline.Logger'));
     parse(ip, cmdline, logger);
 
-    [s,r] = unix(cmdline);
+    [s,r] = system(cmdline);
     logger.add(sprintf('mlbashLogger.cmdline:\n%s\n', cmdline));
     logger.add(sprintf('mlbashLogger.s:  %i\n', s));
     logger.add(sprintf('mlbashLogger.r:\n%s\n', r));

@@ -45,7 +45,7 @@ function fqfn = imaging2str(varargin)
                     for o = 1:length(oneArg)
                         f = [f ' ' imaging2str(oneArg.get(o))];
                     end
-                elseif (isa(oneArg, 'mlfourd.ImagingContext'))
+                elseif (isa(oneArg, 'mlfourd.ImagingContext2'))
                     f = imaging2str(oneArg.fqfilename);
                 elseif (isa(oneArg, 'mlfourd.INIfTI'))
                     f = imaging2str(oneArg.fqfilename);

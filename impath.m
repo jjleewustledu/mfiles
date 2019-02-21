@@ -8,7 +8,7 @@ try
     if (~ischar(imobj))
         imobj = imcast(imobj, 'fqfilename'); end
     imobj = strtok(imobj, '*');
-    pth = filepartsx(imobj, mlfourd.NIfTId.FILETYPE_EXT);
+    pth = filepartsx(imobj, mlfourd.NIfTIInfo.FILETYPE_EXT);
 catch ME
     handexcept(ME);
 end

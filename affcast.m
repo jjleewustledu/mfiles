@@ -12,9 +12,9 @@ import mlfourd.*;
 varargin1 = varargin;
 if (iscell(varargin{1}))
     varargin1 = varargin{1}; end
-[p,fname] = filepartsx(imcast(varargin1{1}, 'fqfilename'), NIfTId.FILETYPE_EXT);
+[p,fname] = filepartsx(imcast(varargin1{1}, 'fqfilename'), NIfTIInfo.FILETYPE_EXT);
 for v = 2:length(varargin1)
-    [p,f] = filepartsx(imcast(varargin1{v}, 'fqfilename'), NIfTId.FILETYPE_EXT);
+    [p,f] = filepartsx(imcast(varargin1{v}, 'fqfilename'), NIfTIInfo.FILETYPE_EXT);
     fname = [fname '_on_' f]; %#ok<AGROW>
 end
 fname = fullfile(p, [fname mlfsl.FlirtVisitor.XFM_SUFFIX]);

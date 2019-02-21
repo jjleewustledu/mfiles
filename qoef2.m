@@ -102,6 +102,6 @@ end
         desc1   = nii.hdr.hist.descrip;
         qpath = '';
         if (imaging.hasFsl); qpath = 'qBOLD/'; end
-        save_nii(nii, [imaging.pnumPath qpath filepfx mlfourd.NIfTId.FILETYPE_EXT]);
+        save_nii(nii, [imaging.pnumPath qpath filepfx mlfourd.NIfTIInfo.FILETYPE_EXT]);
     end % function manage_nii
 end

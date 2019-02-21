@@ -13,7 +13,7 @@ function fn = filename(filobj, ext)
 
     import mlfsl.* mlfourd.*;
     if (iscell(filobj) && 1 == numel(filobj)); filobj = filobj{1}; end
-    if (~exist('ext','var')); ext = NIfTId.FILETYPE_EXT; end
+    if (~exist('ext','var')); ext = NIfTIInfo.FILETYPE_EXT; end
     
     % cell arrays
     assert(~iscell(filobj), 'filename does not support cell-arrays; use filenames');

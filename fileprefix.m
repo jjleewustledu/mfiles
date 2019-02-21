@@ -13,10 +13,10 @@ function fp = fileprefix(filobj, ext)
 %% Developed on Matlab 7.11.0.584 (R2010b) 
 %% $Id$ 
 
-    import mlfsl.* mlfourd.*;
+    import mlfsl.* mlfourd.*; %#ok<*NSTIMP>
 	if (isempty(filobj));                          fp  = filobj; return; end
     if (iscell( filobj) && 1 == numel(filobj)); filobj = filobj{1}; end
-    if (~exist('ext', 'var'));                     ext = NIfTId.FILETYPE_EXT; end
+    if (~exist('ext', 'var'));                     ext = NIfTIInfo.FILETYPE_EXT; end
     
     % non-trivial cell arrays
     assert(~iscell(filobj), 'fileprefix does not support cell-arrays; use fileprefixes');

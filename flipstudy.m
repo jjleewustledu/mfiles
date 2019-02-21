@@ -11,7 +11,7 @@ fprefixes = {'fast_pve_2', ...
 niis = {[]};
 for i = 1:length(fprefixes)
     fprefixes{i} = [fprefixes{i} '_xr3d'];
-    niis{i} = NIfTI.load([fprefixes{i} mlfourd.NIfTId.FILETYPE_EXT]);
+    niis{i} = NIfTI.load([fprefixes{i} mlfourd.NIfTIInfo.FILETYPE_EXT]);
     niis{i}.img = dip_image(flip4d(niis{i}.img, flipflag));
     niis{i}.fileprefix = fprefixes{i};
     
@@ -22,7 +22,7 @@ for i = 1:length(fprefixes)
     niis{i}.dipshow;
     reply = input([fprefixes{i} ' look ok (y/n)? '], 's');
     if (~lstrfind(lower(reply), flipflag)); return; end
-    system(['mv ' niis{i}.fileprefix mlfourd.NIfTId.FILETYPE_EXT ' ' niis{i}.fileprefix '_' datestr(now,30) mlfourd.NIfTId.FILETYPE_EXT]);
+    system(['mv ' niis{i}.fileprefix mlfourd.NIfTIInfo.FILETYPE_EXT ' ' niis{i}.fileprefix '_' datestr(now,30) mlfourd.NIfTIInfo.FILETYPE_EXT]);
     niis{i}.save;
 end
 

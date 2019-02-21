@@ -18,7 +18,7 @@ mff = matchup(breakdown(obj), breakdown(format0));
         switch (class(obj1))
             case 'char'
                 bd = struct('fhandle', @breakdown);
-                [bd.path,bd.fileprefix,bd.ext] = filepartsx(obj1, mlfourd.NIfTId.FILETYPE_EXT);
+                [bd.path,bd.fileprefix,bd.ext] = filepartsx(obj1, mlfourd.NIfTIInfo.FILETYPE_EXT);
             case {'mlfourd.NIfTI' 'mlfourd.ImagingComponent' 'mlfourd.ImagingSeries' 'mlfourd.ImagingComposite'}
                 bd = breakdown(obj1.fqfilename);
             case 'cell'

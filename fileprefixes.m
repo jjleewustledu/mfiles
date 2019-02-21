@@ -16,7 +16,7 @@ function fps = fileprefixes(filobj, ext, rtncell)
 
     import mlfsl.* mlfourd.*;
 	if (isempty(filobj));          fps     = filobj; return; end
-    if (~exist('ext',     'var')); ext     = NIfTId.FILETYPE_EXT; end
+    if (~exist('ext',     'var')); ext     = NIfTIInfo.FILETYPE_EXT; end
     if (~exist('rtncell', 'var')); rtncell = false; end
     
     

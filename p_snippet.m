@@ -45,7 +45,7 @@ if (Npve > 0)
     [hh,dd] = reviewimg(fgnew, 'the new fg mask', hh, dd);
     reply2 = input(['ok to replace ' fgnew.fqfn ' (y/n)? '], 's');
     if (~lstrfind(lower(reply2), 'y')); return; end
-    system(['mv ' fgnew.fqfn ' ' imaging.roiPath fgnew.fileprefix '_' datestr(now,30) NIfTId.FILETYPE_EXT]);
+    system(['mv ' fgnew.fqfn ' ' imaging.roiPath fgnew.fileprefix '_' datestr(now,30) NIfTIInfo.FILETYPE_EXT]);
     fgnew.save;
     clear fg fgnew sumimg
 end

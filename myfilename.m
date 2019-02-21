@@ -10,7 +10,7 @@ function fn = myfilename(varargin)
 
 ip = inputParser;
 addRequired(ip, 'name', @ischar);
-addOptional(ip, 'ext', mlfourd.NIfTId.FILETYPE_EXT, @ischar); 
+addOptional(ip, 'ext', mlfourd.NIfTIInfo.FILETYPE_EXT, @ischar); 
 parse(ip, varargin{:});
 
 [p,f] = myfileparts(ip.Results.name);

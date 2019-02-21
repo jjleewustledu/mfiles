@@ -11,9 +11,9 @@ function fname = fieldcoefcast(varargin)
 varargin1 = varargin;
 if (iscell(varargin{1}))
     varargin1 = varargin{1}; end
-[p,fname] = filepartsx(imcast(varargin1{1}, 'fqfilename'), mlfourd.NIfTId.FILETYPE_EXT);
+[p,fname] = filepartsx(imcast(varargin1{1}, 'fqfilename'), mlfourd.NIfTIInfo.FILETYPE_EXT);
 for v = 2:length(varargin1)
-    [p,f] = filepartsx(imcast(varargin1{v}, 'fqfilename'), mlfourd.NIfTId.FILETYPE_EXT);
+    [p,f] = filepartsx(imcast(varargin1{v}, 'fqfilename'), mlfourd.NIfTIInfo.FILETYPE_EXT);
     fname = [fname '_on_' f]; %#ok<AGROW>
 end
 fname = fullfile(p, [fname '_warpcoef.nii.gz.']);

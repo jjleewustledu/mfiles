@@ -11,8 +11,8 @@ function patientLooper(ptfilt, fhandle)
 %% $Id$ 
 if (~exist('fhandle','var')); fhandle = @Np755Maker.makeTest; end
 import mlfsl.* mlfourd.*;
-matlabpool close force local
-matlabpool local
+parpool close force local
+parpool local
 makeHandle = fhandle; % makeRenamed; %.makeAll; % @makeFnirts; % FUNCTION-HANDLE TO LOOPED FUNCTION  
 REUSE = true;
 

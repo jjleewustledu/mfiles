@@ -6,10 +6,10 @@ function ensureSerial
 %% Developed on Matlab 7.13.0.564 (R2011b) 
 %% $Id$ 
 
-if (matlabpool('size') > 0)
+if (parpool('size') > 0)
     throw( ...
-        MException('mfiles:StateAssertionFailed', 'ensureSerial.matlabpool(''size'')->%i', matlabpool('size')));
-    matlabpool('close');
+        MException('mfiles:StateAssertionFailed', 'ensureSerial.parpool(''size'')->%i', parpool('size')));
+    parpool('close');
 end
 
 

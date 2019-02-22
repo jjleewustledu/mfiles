@@ -46,7 +46,7 @@ function [s,r] = mlbash(cmdline, varargin)
             [s,r] = system(cmdline, '-echo');
         end
         if (s ~= 0)
-            error('mfiles:ChildProcessError', 'mlbash:\n%s\nreturned s->%i\n%s', cmdline, s, r);
+            warning('mfiles:ChildProcessError', 'mlbash:\n%s\nreturned s->%i\n%s', cmdline, s, r);
         end        
         if (mlpipeline.PipelineRegistry.instance.verbose)
             fprintf('mlbash:\n%s\nreturned s->%i\n%s', cmdline, s, r);

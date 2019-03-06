@@ -1,15 +1,14 @@
 function those = construct_resolved(varargin)
     %% CONSTRUCT_RESOLVED supports t4_resolve for niftypet.  It is the top level of a Matlab Compiler library project.
-    %  Usage:  resolve_pet('sessionExpr', sessExpr, 'visitsExpr', vExpr, 'tracer', aTrac, 'ac', tf) 
+    %  Usage:  resolve_pet('sessionExpr', sessExpr, 'tracer', aTrac, 'ac', tf) 
     %  
     %  @precondition ct 4dfp in fullfile(getenv('SUBJECTS_DIR'), sessExpr); 
     %  listmode .bf/.dcm and umap folder of .dcm in 
     %  tracerLocation := fullfile(getenv('SUBJECTS_DIR'), sessExpr, vExpr, tracerFolder), e.g.,
     %  tracerFolder := 'FDG_V1-NAC' | 'FDG_V1-AC'.
     %
-    %  @param sessionsExpr is char, e.g., 'NP995_24'.
-    %  @param visitsExpr  is char, e.g., 'V1'.
-    %  @param tracer      is cahr, e.g., 'FDG'.
+    %  @param sessionsExpr is char, e.g., 'ses-E00026'.
+    %  @param tracer       is char, e.g., 'FDG'.
     %  @param ac, attentuaion corection, is logical.  Default := false.
     %  @return new filesystem tree at tracerLocation containing:  
     %  if not ac:  
@@ -36,7 +35,6 @@ function those = construct_resolved(varargin)
     ip = inputParser;
     ip.KeepUnmatched = true;
     addParameter(ip, 'sessionsExpr', 'HYGLY*');
-    addParameter(ip, 'visitsExpr', 'V*');
     addParameter(ip, 'scanList', SCANS);
     addParameter(ip, 'tracer', TRACERS, @(x) ischar(x) || iscell(x));
     addParameter(ip, 'ac', AC);
@@ -44,6 +42,7 @@ function those = construct_resolved(varargin)
     addParameter(ip, 'compAlignMethod', '', @ischar); % align_multiSpectral
     addParameter(ip, 'tauIndices', [], @isnumeric);
     addParameter(ip, 'fractionalImageFrameThresh', [], @isnumeric);
+    addParameter(ip, 'visitsExpr', ''); % legacy to ignore
     parse(ip, varargin{:});
     ipr = adjustParameters(ip.Results);
     sessExpr = ipr.sessionsExpr;
@@ -54,32 +53,29 @@ function those = construct_resolved(varargin)
     for idtsess = 1:length(dtsess.fqdns)
         sessp = dtsess.fqdns{idtsess};
         pwdsess = pushd(sessp);
-        dtv = DirTools(fullfile(sessp, ipr.visitsExpr));     
-        for idtv = 1:length(dtv.fqdns)
 
-            for itrac = 1:length(tracers)
-                for iscan = ipr.scanList
-                    if (iscan > 1 && strcmpi(tracers{itrac}, 'FDG'))
-                        continue
-                    end
-                    try
-                        sessd = constructSessionData( ...
-                            ipr, sessp, str2double(dtv.dns{idtv}(2:end)), iscan, tracers{itrac});
-                        
-                        fprintf('construct_resolved:\n');
-                        fprintf([evalc('disp(sessd)') '\n']);
-                        fprintf(['\tsessd.TracerLocation->' sessd.tracerLocation '\n']);
-                        warning('off', 'MATLAB:subsassigndimmismatch');
-                        those{idtsess,idtv,itrac,iscan} = TracerDirector2.constructResolved( ...
-                            'sessionData', sessd, varargin{:});  %#ok<AGROW>
-                        warning('on', 'MATLAB:subsassigndimmismatch');
-                    catch ME
-                        dispwarning(ME)
-                        getReport(ME)
-                    end
+        for itrac = 1:length(tracers)
+            for iscan = ipr.scanList
+                if (iscan > 1 && strcmpi(tracers{itrac}, 'FDG'))
+                    continue
+                end
+                try
+                    sessd = constructSessionData( ...
+                        ipr, sessp, iscan, tracers{itrac});
+
+                    fprintf('construct_resolved:\n');
+                    fprintf([evalc('disp(sessd)') '\n']);
+                    fprintf(['\tsessd.TracerLocation->' sessd.tracerLocation '\n']);
+                    warning('off', 'MATLAB:subsassigndimmismatch');
+                    those{idtsess,idtv,itrac,iscan} = TracerDirector2.constructResolved( ...
+                        'sessionData', sessd, varargin{:});  %#ok<AGROW>
+                    warning('on', 'MATLAB:subsassigndimmismatch');
+                catch ME
+                    dispwarning(ME)
+                    getReport(ME)
                 end
             end
-        end                        
+        end                      
         popd(pwdsess);
     end
     
@@ -87,19 +83,18 @@ function those = construct_resolved(varargin)
 
     function ipr = adjustParameters(ipr)
         assert(isstruct(ipr));
-        results = {'sessionsExpr' 'visitsExpr'};
+        results = {'sessionsExpr'};
         for r = 1:length(results)
             if (~lstrfind(ipr.(results{r}), '*'))
                 ipr.(results{r}) = [ipr.(results{r}) '*'];
             end
         end
     end
-    function sessd = constructSessionData(ipr, sessp, v, sc, tracer)
+    function sessd = constructSessionData(ipr, sessp, sc, tracer)
         import mlraichle.*;
         sessd = SessionData( ...
             'studyData', StudyData, ...
             'sessionPath', sessp, ...
-            'vnumber', v, ...
             'snumber', sc, ...
             'tracer', tracer, ...
             'ac', ipr.ac);

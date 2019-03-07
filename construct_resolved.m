@@ -27,47 +27,38 @@ function those = construct_resolved(varargin)
     %  @return those             is a cell-array of objects specified by factoryMethod.
     %  @return dtsess            is an mlsystem.DirTool for sessions.
     
-    SCANS = 1:4;
-    TRACERS = {'FDG'}; % 'HO' 'OC' 'OO'
+    TRACERS = {'OC' 'OO' 'HO'}; %{'FDG'}; 
     AC = false;
         
     import mlsystem.* mlraichle.*; %#ok<NSTIMP>
     ip = inputParser;
     ip.KeepUnmatched = true;
-    addParameter(ip, 'sessionsExpr', 'HYGLY*');
-    addParameter(ip, 'scanList', SCANS);
+    addParameter(ip, 'sessionsExpr', 'ses-*');
     addParameter(ip, 'tracer', TRACERS, @(x) ischar(x) || iscell(x));
     addParameter(ip, 'ac', AC);
     addParameter(ip, 'frameAlignMethod', '', @ischar); % align_10243
     addParameter(ip, 'compAlignMethod', '', @ischar); % align_multiSpectral
-    addParameter(ip, 'tauIndices', [], @isnumeric);
     addParameter(ip, 'fractionalImageFrameThresh', [], @isnumeric);
-    addParameter(ip, 'visitsExpr', ''); % legacy to ignore
     parse(ip, varargin{:});
     ipr = adjustParameters(ip.Results);
     sessExpr = ipr.sessionsExpr;
-    tracers = ensureCell(ipr.tracer);
     those = {};
-
-    dtsess = DirTools(fullfile(RaichleRegistry.instance.subjectsDir, sessExpr));
-    for idtsess = 1:length(dtsess.fqdns)
-        sessp = dtsess.fqdns{idtsess};
-        pwdsess = pushd(sessp);
-
-        for itrac = 1:length(tracers)
-            for iscan = ipr.scanList
-                if (iscan > 1 && strcmpi(tracers{itrac}, 'FDG'))
-                    continue
-                end
+    
+    dtproj = DirTools(RaichleRegistry.instance.projectsDir);
+    for iproj = 1:length(dtproj.fqdns)
+        dtsess = DirTools(fullfile(dtproj.fqdns{iproj}, sessExpr));
+        for isess = 1:length(dtsess.fqdns)
+            pwd0 = pushd(dtsess.fqdns{isess});
+            dttrac = mlpet.DirToolTracer('tracer', ipr.tracer, 'ac', ipr.ac);
+            for itrac = 1:length(dttrac.fqdns)
                 try
-                    sessd = constructSessionData( ...
-                        ipr, sessp, iscan, tracers{itrac});
-
+                    sessd = constructSessionData(ipr, dtproj.dns{iproj}, dtsess.dns{isess}, dttrac.dns{itrac});
+                    
                     fprintf('construct_resolved:\n');
                     fprintf([evalc('disp(sessd)') '\n']);
                     fprintf(['\tsessd.TracerLocation->' sessd.tracerLocation '\n']);
                     warning('off', 'MATLAB:subsassigndimmismatch');
-                    those{idtsess,idtv,itrac,iscan} = TracerDirector2.constructResolved( ...
+                    those{isess,itrac} = TracerDirector2.constructResolved( ...
                         'sessionData', sessd, varargin{:});  %#ok<AGROW>
                     warning('on', 'MATLAB:subsassigndimmismatch');
                 catch ME
@@ -75,8 +66,8 @@ function those = construct_resolved(varargin)
                     getReport(ME)
                 end
             end
-        end                      
-        popd(pwdsess);
+            popd(pwd0);
+        end
     end
     
     %% INTERNAL FUNC
@@ -90,13 +81,13 @@ function those = construct_resolved(varargin)
             end
         end
     end
-    function sessd = constructSessionData(ipr, sessp, sc, tracer)
+    function sessd = constructSessionData(ipr, projf, sessf, tracf)
         import mlraichle.*;
         sessd = SessionData( ...
-            'studyData', StudyData, ...
-            'sessionPath', sessp, ...
-            'snumber', sc, ...
-            'tracer', tracer, ...
+            'studyData', RaichleRegistry.instance, ...
+            'projectFolder', projf, ...
+            'sessionFolder', sessf, ...
+            'tracerFolder', tracf, ...
             'ac', ipr.ac);
         if (~isempty(ipr.tauIndices))
             sessd.tauIndices = ipr.tauIndices;

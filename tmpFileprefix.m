@@ -22,7 +22,7 @@ function fqfp = tmpFileprefix(varargin)
     end
 
     fqfp = fullfile(ip.Results.path, ...
-         sprintf('%s%s_D%s', tag, ip.Results.func, datestr(now,'yyyymmddTHHMMSSFFF')));
+         sprintf('%s%s_%s', tag, ip.Results.func, mydatetimestr(now)));
 end
 
 % Created with NEWFCN.m by Frank Gonzalez-Morphy (frank.gonzalez-morphy@mathworks.de) 

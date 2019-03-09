@@ -27,13 +27,14 @@ function those = construct_resolved(varargin)
     %  @return those             is a cell-array of objects specified by factoryMethod.
     %  @return dtsess            is an mlsystem.DirTool for sessions.
     
-    TRACERS = {'OC' 'OO' 'HO'}; %{'FDG'}; 
+    TRACERS = {'OC' 'HO' 'OO'}; %{'FDG'}; 
     AC = false;
         
     import mlsystem.* mlraichle.*; %#ok<NSTIMP>
     ip = inputParser;
     ip.KeepUnmatched = true;
-    addParameter(ip, 'sessionsExpr', 'ses-*');
+    addParameter(ip, 'projectsExpr', 'CCIR_*', @ischar);
+    addParameter(ip, 'sessionsExpr', 'ses-*', @ischar);
     addParameter(ip, 'tracer', TRACERS, @(x) ischar(x) || iscell(x));
     addParameter(ip, 'ac', AC);
     addParameter(ip, 'frameAlignMethod', '', @ischar); % align_10243
@@ -41,16 +42,17 @@ function those = construct_resolved(varargin)
     addParameter(ip, 'fractionalImageFrameThresh', [], @isnumeric);
     parse(ip, varargin{:});
     ipr = adjustParameters(ip.Results);
+    projExpr = ipr.projectsExpr;
     sessExpr = ipr.sessionsExpr;
     those = {};
     
-    dtproj = DirTools(RaichleRegistry.instance.projectsDir);
-    for iproj = 1:length(dtproj.fqdns)
+    dtproj = DirTools(fullfile(RaichleRegistry.instance.projectsDir, projExpr));
+    for iproj = 1:1 %length(dtproj.fqdns)
         dtsess = DirTools(fullfile(dtproj.fqdns{iproj}, sessExpr));
-        for isess = 1:length(dtsess.fqdns)
+        for isess = 1:1 %length(dtsess.fqdns)
             pwd0 = pushd(dtsess.fqdns{isess});
             dttrac = mlpet.DirToolTracer('tracer', ipr.tracer, 'ac', ipr.ac);
-            for itrac = 1:length(dttrac.fqdns)
+            for itrac = 1:1 %length(dttrac.fqdns)
                 try
                     sessd = constructSessionData(ipr, dtproj.dns{iproj}, dtsess.dns{isess}, dttrac.dns{itrac});
                     
@@ -74,7 +76,7 @@ function those = construct_resolved(varargin)
 
     function ipr = adjustParameters(ipr)
         assert(isstruct(ipr));
-        results = {'sessionsExpr'};
+        results = {'projectsExpr' 'sessionsExpr'};
         for r = 1:length(results)
             if (~lstrfind(ipr.(results{r}), '*'))
                 ipr.(results{r}) = [ipr.(results{r}) '*'];
@@ -87,11 +89,7 @@ function those = construct_resolved(varargin)
             'studyData', RaichleRegistry.instance, ...
             'projectFolder', projf, ...
             'sessionFolder', sessf, ...
-            'tracerFolder', tracf, ...
-            'ac', ipr.ac);
-        if (~isempty(ipr.tauIndices))
-            sessd.tauIndices = ipr.tauIndices;
-        end
+            'tracerFolder', tracf);
         if (~isempty(ipr.fractionalImageFrameThresh))
             sessd.fractionalImageFrameThresh = ipr.fractionalImageFrameThresh;
         end
@@ -102,7 +100,6 @@ function those = construct_resolved(varargin)
             sessd.compAlignMethod = ipr.compAlignMethod;
         end
     end    
-    
 end
 
 % Created with NEWFCN.m by Frank Gonzalez-Morphy (frank.gonzalez-morphy@mathworks.de) 

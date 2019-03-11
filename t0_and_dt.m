@@ -3,6 +3,7 @@ function [tbl,s] = t0_and_dt(tmax, varargin)
     %  @param tmax is scan duration / sec
     %  @param xi   is duration of first frame; default := 2 sec
     %  @param hl   is the tracer halflife; default = 122.24 sec for [15O]
+    %                                                60*109.771(20) sec for [18F]
     %  @param mult multiplies lambda; default := 1
     %  @return tbl is table:  t0, dt
     %  @return s   is string for dt

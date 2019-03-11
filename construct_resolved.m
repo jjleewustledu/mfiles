@@ -27,7 +27,7 @@ function those = construct_resolved(varargin)
     %  @return those             is a cell-array of objects specified by factoryMethod.
     %  @return dtsess            is an mlsystem.DirTool for sessions.
     
-    TRACERS = {'OC' 'HO' 'OO'}; %{'FDG'}; 
+    %TRACERS = {'OC' 'HO' 'OO' 'FDG'}; 
     AC = false;
         
     import mlsystem.* mlraichle.*; %#ok<NSTIMP>
@@ -35,7 +35,7 @@ function those = construct_resolved(varargin)
     ip.KeepUnmatched = true;
     addParameter(ip, 'projectsExpr', 'CCIR_*', @ischar);
     addParameter(ip, 'sessionsExpr', 'ses-*', @ischar);
-    addParameter(ip, 'tracer', TRACERS, @(x) ischar(x) || iscell(x));
+    addParameter(ip, 'tracer', 'HO*', @(x) ischar(x) || iscell(x));
     addParameter(ip, 'ac', AC);
     addParameter(ip, 'frameAlignMethod', '', @ischar); % align_10243
     addParameter(ip, 'compAlignMethod', '', @ischar); % align_multiSpectral
@@ -47,12 +47,12 @@ function those = construct_resolved(varargin)
     those = {};
     
     dtproj = DirTools(fullfile(RaichleRegistry.instance.projectsDir, projExpr));
-    for iproj = 1:1 %length(dtproj.fqdns)
+    for iproj = 1:length(dtproj.fqdns)
         dtsess = DirTools(fullfile(dtproj.fqdns{iproj}, sessExpr));
-        for isess = 1:1 %length(dtsess.fqdns)
+        for isess = 1:length(dtsess.fqdns)
             pwd0 = pushd(dtsess.fqdns{isess});
             dttrac = mlpet.DirToolTracer('tracer', ipr.tracer, 'ac', ipr.ac);
-            for itrac = 1:1 %length(dttrac.fqdns)
+            for itrac = 1:length(dttrac.fqdns)
                 try
                     sessd = constructSessionData(ipr, dtproj.dns{iproj}, dtsess.dns{isess}, dttrac.dns{itrac});
                     
@@ -60,9 +60,8 @@ function those = construct_resolved(varargin)
                     fprintf([evalc('disp(sessd)') '\n']);
                     fprintf(['\tsessd.TracerLocation->' sessd.tracerLocation '\n']);
                     warning('off', 'MATLAB:subsassigndimmismatch');
-                    those{isess,itrac} = TracerDirector2.constructResolved( ...
-                        'sessionData', sessd, varargin{:});  %#ok<AGROW>
-                    warning('on', 'MATLAB:subsassigndimmismatch');
+                    those{isess,itrac} = TracerDirector2.constructResolved('sessionData', sessd, varargin{:});  %#ok<AGROW>
+                    warning('on',  'MATLAB:subsassigndimmismatch');
                 catch ME
                     dispwarning(ME)
                     getReport(ME)

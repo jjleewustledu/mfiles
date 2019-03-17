@@ -5,6 +5,7 @@ function handexcept(exc, varargin)
 %  e.g.:  handexcept(ME, 'mlpackage:SomeTypicalError', 'methodIdentifier:  contextual description')
 %  @param required exc is an MException.
 %  @param varargin conforms to interface of native error() and https://docs.python.org/3/library/exceptions.html .
+%  @return rethrows exc.
 %  @throws exc, possibly including additional exception causes.
 
 if (isempty(varargin))

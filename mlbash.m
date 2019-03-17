@@ -1,25 +1,22 @@
 function [s,r] = mlbash(cmdline, varargin)
     %% MLBASH wraps the bash command line
-    %  @param cmdline is the command-line string
-    %  @param [param-name, param-value[,...]] may be:
-    %          diaryFilename - char
-    %          echo - bool
-    %          logger - mlpipeline.Logger, which is a handle class
+    %  @param cmdline, required, is the command-line string
+    %  @param diaryFilename is char and invokes mlbashDiary
+    %  @param logger is an mlpipeline.ILogger, which is a handle and invokes mlbashLogger
     %  @param echo is logical
-    %  @return s is the unix status
-    %  @return r is the unix result
-    %  @throws 'mfiles:unixException'
-    %  See also:  unix, system
+    %  @return s is the system status
+    %  @return r is the system result
+    %  @throws 'mfiles:ChildProcessError'
+    %  See also:  system
     
-    %% Version $Revision$ was created $Date$ by $Author$  
-    %% and checked into svn repository $URL$ 
-    %% Developed on Matlab 7.10.0.499 (R2010a) 
-    %% $Id$ 
+    %  Version $Revision$ was created 2010 by jjlee  
+    %  and checked into git repository MATLAB-Drive/mfiles.
+    %  Developed on Matlab 7.10.0.499 (R2010a) 
     
     ip = inputParser; 
     addRequired( ip, 'cmdline',           @ischar);
     addParameter(ip, 'diaryFilename', '', @ischar);
-    addParameter(ip, 'logger', [],        @(x) isa(x, 'mlpipeline.Logger'));
+    addParameter(ip, 'logger', [],        @(x) isa(x, 'mlpipeline.ILogger'));
     addParameter(ip, 'echo', false,       @islogical);     
     parse(ip, cmdline, varargin{:});    
     s = 0; r = '';
@@ -27,16 +24,10 @@ function [s,r] = mlbash(cmdline, varargin)
     try
         if (~isempty(ip.Results.diaryFilename))
             [s,r] = mlbashDiary(cmdline, ip.Results.diaryFilename);
-            if (s ~= 0)
-                error('mfiles:ChildProcessError', 'mlbash:\n%s\nreturned s->%i\n%s', cmdline, s, r);
-            end
             return
         end
         if (~isempty(ip.Results.logger))
             [s,r] = mlbashLogger(cmdline, ip.Results.logger);
-            if (s ~= 0)
-                error('mfiles:ChildProcessError', 'mlbash:\n%s\nreturned s->%i\n%s', cmdline, s, r);
-            end
             return
         end
         
@@ -46,7 +37,7 @@ function [s,r] = mlbash(cmdline, varargin)
             [s,r] = system(cmdline, '-echo');
         end
         if (s ~= 0)
-            warning('mfiles:ChildProcessError', 'mlbash:\n%s\nreturned s->%i\n%s', cmdline, s, r);
+            error('mfiles:ChildProcessError', 'mlbash:\n%s\nreturned s->%i\n%s', cmdline, s, r);
         end        
         if (mlpipeline.PipelineRegistry.instance.verbose)
             fprintf('mlbash:\n%s\nreturned s->%i\n%s', cmdline, s, r);

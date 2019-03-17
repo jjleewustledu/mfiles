@@ -11,6 +11,15 @@ function [s,r] = mlbashDiary(cmdline, diaryfn)
 
     diary(diaryfn);
     fprintf('mlbashDiary.cmdline:  %s\n', cmdline);
+    try
+        [s,r] = system(cmdline);
+        fprintf('mlbashDiary.s:  %i\n', s);
+        fprintf('mlbashDiary.r:\n%s\n', r);
+        diary('off');
+    catch ME
+        diary('off');
+        rethrow(ME);
+    end
     if (s ~= 0)
         error('mfiles:ChildProcessError', 'mlbashDiary:\n%s\nreturned s->%i\n%s', cmdline, s, r);
     end

@@ -28,6 +28,7 @@ function those = construct_resolved(varargin)
     addOptional( ip, 'sessionsExpr', 'ses-*', @ischar);
     addOptional( ip, 'tracer', TRACERS, @(x) ischar(x) || iscell(x));
     addOptional( ip, 'ac', []);
+    addParameter(ip, 'ignoreFinishMark', false, @islogical);
     addParameter(ip, 'frameAlignMethod', '', @ischar); % align_10243
     addParameter(ip, 'compAlignMethod', '', @ischar); % align_multiSpectral
     addParameter(ip, 'fractionalImageFrameThresh', [], @(x) isnumeric(x) || ischar(x));
@@ -95,6 +96,9 @@ function those = construct_resolved(varargin)
         end
         if (~isempty(ipr.compAlignMethod))
             sessd.compAlignMethod = ipr.compAlignMethod;
+        end
+        if (~isempty(ipr.ignoreFinishMark))
+            sessd.ignoreFinishMark = true;
         end
     end    
 end

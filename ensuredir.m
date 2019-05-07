@@ -19,7 +19,9 @@ if (~isdir(fullfile(varargin{:})))
             varargin1 = varargin;
         end
         str = cell2str(varargin1, 'AsRow', true);
-        fprintf('ensuredir:  attempting call to mkdir(%s)\n', str);
+        if ~isempty(getenv('DEBUG'))
+            fprintf('ensuredir:  attempting call to mkdir(%s)\n', str);
+        end
         mkdir(varargin1{:});
     catch ME
         handwarning(ME);

@@ -4,7 +4,7 @@ function those = construct_umaps(varargin)
     %  e.g.:   >> construct_resolved('CCIR_00123', 'ses-E0012*')
     %  
     %  @precondition CT DICOM files in fullfile(subjectsDir, project, session, 'ct', '') and
-    %                subjectsDir := getenv('PPG_SUBJECTS_DIR')
+    %                subjectsDir := getenv('SUBJECTS_DIR')
     %  @precondition FreeSurfer recon-all results in fullfile(subjectsDir, project, session, 'mri', '')
     %
     %  @param projectsExpr is char, e.g., 'CCIR_00123' or globbed.

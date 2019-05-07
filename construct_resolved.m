@@ -4,7 +4,7 @@ function those = construct_resolved(varargin)
     %  e.g.:   >> construct_resolved('CCIR_00123', 'ses-E0012*', 'OO_DT20190101*-Converted-NAC*')
     %  
     %  @precondition fullfile(subjectsDir, project, session, 'umapSynth_op_T1001_b43.4dfp.*') and
-    %                         subjectsDir := getenv('PPG_SUBJECTS_DIR')
+    %                         subjectsDir := getenv('SUBJECTS_DIR')
     %  @precondition files{.bf,.dcm} in fullfile(subjectsDir, project, session, 'LM', '')
     %  @precondition files{.bf,.dcm} in fullfile(subjectsDir, project, session, 'norm', '')
     %  @precondition FreeSurfer recon-all results in fullfile(subjectsDir, project, session, 'mri', '')
@@ -37,6 +37,9 @@ function those = construct_resolved(varargin)
     projExpr = ipr.projectsExpr;
     sessExpr = ipr.sessionsExpr;
     those = {};
+    
+    %reg = mlraichle.RaichleRegistry.instance();
+    %reg.debug = true;
     
     dtproj = DirTools(fullfile(RaichleRegistry.instance.projectsDir, projExpr));
     for iproj = 1:length(dtproj.fqdns)
@@ -81,13 +84,13 @@ function those = construct_resolved(varargin)
             ipr.fractionalImageFrameThresh = str2double(ipr.fractionalImageFrameThresh);            
         end
     end
-    function sessd = constructSessionData(ipr, projf, sessf, tracf)
+    function sessd = constructSessionData(ipr, projf, sessf, scanf)
         import mlraichle.*;
         sessd = SessionData( ...
             'studyData', RaichleRegistry.instance, ...
             'projectFolder', projf, ...
             'sessionFolder', sessf, ...
-            'tracerFolder', tracf);
+            'scanFolder', scanf);
         if (~isempty(ipr.fractionalImageFrameThresh))
             sessd.fractionalImageFrameThresh = ipr.fractionalImageFrameThresh;
         end

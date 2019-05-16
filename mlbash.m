@@ -1,6 +1,6 @@
 function [s,r] = mlbash(cmdline, varargin)
     %% MLBASH wraps the bash command line
-    %  @param cmdline, required, is the command-line string
+    %  @param required cmdline is the command-line string
     %  @param diaryFilename is char and invokes mlbashDiary
     %  @param logger is an mlpipeline.ILogger, which is a handle and invokes mlbashLogger
     %  @param echo is logical
@@ -21,29 +21,23 @@ function [s,r] = mlbash(cmdline, varargin)
     parse(ip, cmdline, varargin{:});    
     s = 0; r = '';
     
-    try
-        if (~isempty(ip.Results.diaryFilename))
-            [s,r] = mlbashDiary(cmdline, ip.Results.diaryFilename);
-            return
-        end
-        if (~isempty(ip.Results.logger))
-            [s,r] = mlbashLogger(cmdline, ip.Results.logger);
-            return
-        end
-        
-        if (~ip.Results.echo)
-            [s,r] = system(cmdline);
-        else
-            [s,r] = system(cmdline, '-echo');
-        end
-        if (s ~= 0)
-            throw(MException('mfiles:ChildProcessError', 'mlbash:\n%s\nreturned s->%i\n%s', cmdline, s, r));
-        end        
-        if (mlpipeline.PipelineRegistry.instance.verbose)
-            fprintf('mlbash:\n%s\nreturned s->%i\n%s', cmdline, s, r);
-        end
-    catch ME
-        dispexcept(ME, 'mfiles:ChildProcessError', 'mlbash:\n%s\nreturned s->%i\n%s', cmdline, s, r);
+    if ~isempty(ip.Results.diaryFilename)
+        [s,r] = mlbashDiary(cmdline, ip.Results.diaryFilename);
+        return
+    end
+    if ~isempty(ip.Results.logger)
+        [s,r] = mlbashLogger(cmdline, ip.Results.logger);
+        return
+    end
+    
+    if ip.Results.echo || mlpipeline.PipelineRegistry.instance.verbose
+        [s,r] = system(cmdline, '-echo');
+    else
+        [s,r] = system(cmdline);
+    end
+    if s ~= 0
+        throw(MException('mfiles:ChildProcessError', ...
+            'mlbash:\n%s\nreturned status -> %i\n         result -> %s', cmdline, s, r));
     end
 end
 

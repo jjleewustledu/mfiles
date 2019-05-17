@@ -7,8 +7,9 @@ function construct_ct(varargin)
     %% last modified $LastChangedDate$ and checked into repository ophthalmic:~/MATLAB-Drive/mfiles,  
     %% developed on Matlab 9.5.0.1067069 (R2018b) Update 4.  Copyright 2019 John Joowon Lee.     
     
-    subjectsDir = getenv('SUBJECTS_DIR');
+    projectsDir = getenv('PROJECTS_DIR');
     projectsDirs = {'CCIR_00754' 'CCIR_00559'};
+    subjectsDir = getenv('SUBJECTS_DIR');
     ccj = jsondecode(fileread(fullfile(subjectsDir, 'construct_ct.json')));
     subjects = fields(ccj);
     
@@ -19,7 +20,7 @@ function construct_ct(varargin)
         for ip = 1:length(projectsDirs)
             for ie = 1:length(experiments)
                 % propose d
-                d = fullfile(subjectsDir, projectsDirs{ip}, cnda2ses(experiments{ie}), 'ct', '');
+                d = fullfile(projectsDir, projectsDirs{ip}, cnda2ses(experiments{ie}), 'ct', '');
                 if isfolder(d)
                     % found subject's ct
                     ccj.(subjects{is}).ct_dir = d;
@@ -57,7 +58,7 @@ function ct = build_ct_4dfp(d)
 end
 
 function copy_ct_4dfp(sbj0, sbj) % subject with ct, subject alias
-    subjectsDir = getenv('SUBJECTS_DIR');
+    projectsDir = getenv('PROJECTS_DIR');
     projectsDirs = {'CCIR_00754' 'CCIR_00559'};
     if ~isfield(sbj0, 'experiment_with_ct')
         return
@@ -68,7 +69,7 @@ function copy_ct_4dfp(sbj0, sbj) % subject with ct, subject alias
     for ip = 1:length(projectsDirs)
         for ie = 1:length(experiments)
             % propose dst
-            dst = fullfile(subjectsDir, projectsDirs{ip}, cnda2ses(experiments{ie}), '');
+            dst = fullfile(projectsDir, projectsDirs{ip}, cnda2ses(experiments{ie}), '');
             if isfolder(dst) && ~strcmp(src, dst)
                 try
                     copyfile(ct_ast, dst, 'f');

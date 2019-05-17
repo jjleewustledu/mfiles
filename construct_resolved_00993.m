@@ -3,28 +3,31 @@ function those = construct_resolved_00993(varargin)
     %  Usage:  construct_resolved_00993([projectsExpr, sessionsExpr, tracerExpr, ac])
     %  e.g.:   >> construct_resolved_00993('CCIR_00123', 'ses-E0012*', 'OO_DT20190101*-Converted-NAC*')
     %  
-    %  @precondition fullfile(subjectsDir, project, session, 'umapSynth_op_T1001_b43.4dfp.*') and
-    %                         subjectsDir := getenv('SUBJECTS_DIR')
-    %  @precondition files{.bf,.dcm} in fullfile(subjectsDir, project, session, 'LM', '')
-    %  @precondition files{.bf,.dcm} in fullfile(subjectsDir, project, session, 'norm', '')
-    %  @precondition FreeSurfer recon-all results in fullfile(subjectsDir, project, session, 'mri', '')
+    %  @precondition fullfile(projectsDir, project, session, 'umapSynth_op_T1001_b43.4dfp.*') and
+    %                         projectsDir := getenv('PROJECTS_DIR')
+    %  @precondition files{.bf,.dcm} in fullfile(projectsDir, project, session, 'LM', '')
+    %  @precondition files{.bf,.dcm} in fullfile(projectsDir, project, session, 'norm', '')
+    %  @precondition FreeSurfer recon-all results in fullfile(projectsDir, project, session, 'mri', '')
     %
     %  @param projectsExpr is char, e.g., 'CCIR_00123' or globbed.
     %  @param sessionsExpr is char, e.g., 'ses-E01234' or globbed.
     %  @param tracerExpr   is char, e.g., 'FDG_DT20000101090000.000000-Converted-NAC' or globbed.
     %  @param ac           is logical or []; default := [].  
     %         Set to logical to constrain globbing attentuaion corection to '-NAC' or '-AC'.
-    %  @return results in fullfile(subjectsDir, project, session, tracer) 
+    %  @return results in fullfile(projectsDir, project, session, tracer) 
     %          for elements of projectsExpr, sessionsExpr and tracerExpr.
-    %  @return cell array of objects specified by mlraichle.TracerDirector2.constructResolved().
+    %  @return cell array of objects specified by mlan.TracerDirector2.constructResolved().
     
     TRACERS = {'OC*' 'HO*' 'OO*'}; 
+    
+    setenv('PROJECTS_DIR', '/scratch/jjlee/Singularity');
+    setenv('SUBJECTS_DIR', '/scratch/jjlee/Singularity/subjects_00993');
         
-    import mlsystem.* mlraichle.*; %#ok<NSTIMP>
+    import mlsystem.* mlan.*; %#ok<NSTIMP>
     import mlpet.DirToolTracer;
     ip = inputParser;
     ip.KeepUnmatched = true;
-    addOptional( ip, 'projectsExpr', 'CCIR_*', @ischar);
+    addOptional( ip, 'projectsExpr', 'CCIR_00993', @ischar);
     addOptional( ip, 'sessionsExpr', 'ses-*', @ischar);
     addOptional( ip, 'tracer', TRACERS, @(x) ischar(x) || iscell(x));
     addOptional( ip, 'ac', []);
@@ -38,10 +41,10 @@ function those = construct_resolved_00993(varargin)
     sessExpr = ipr.sessionsExpr;
     those = {};
     
-    %reg = mlraichle.RaichleRegistry.instance();
+    %reg = mlan.AnRegistry.instance();
     %reg.debug = true;
     
-    dtproj = DirTools(fullfile(RaichleRegistry.instance.projectsDir, projExpr));
+    dtproj = DirTools(fullfile(AnRegistry.instance.projectsDir, projExpr));
     for iproj = 1:length(dtproj.fqdns)
         dtsess = DirTools(fullfile(dtproj.fqdns{iproj}, sessExpr));
         for isess = 1:length(dtsess.fqdns)
@@ -86,8 +89,9 @@ function those = construct_resolved_00993(varargin)
     end
     function sessd = constructSessionData(ipr, projf, sessf, scanf)
         sessd = mlan.SessionData( ...
-            'studyData', mlraichle.RaichleRegistry.instance, ...
+            'studyData', mlan.AnRegistry.instance, ...
             'projectFolder', projf, ...
+            'subjectData', mlan.SubjectData(), ...
             'sessionFolder', sessf, ...
             'scanFolder', scanf);
         if (~isempty(ipr.fractionalImageFrameThresh))

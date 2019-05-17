@@ -3,13 +3,13 @@ function those = construct_umaps(varargin)
     %  Usage:  construct_resolved([projectsExpr, sessionsExpr])
     %  e.g.:   >> construct_resolved('CCIR_00123', 'ses-E0012*')
     %  
-    %  @precondition CT DICOM files in fullfile(subjectsDir, project, session, 'ct', '') and
+    %  @precondition CT DICOM files in fullfile(projectsDir, project, session, 'ct', '') and
     %                subjectsDir := getenv('SUBJECTS_DIR')
     %  @precondition FreeSurfer recon-all results in fullfile(subjectsDir, project, session, 'mri', '')
     %
     %  @param projectsExpr is char, e.g., 'CCIR_00123' or globbed.
     %  @param sessionsExpr is char, e.g., 'ses-E01234' or globbed.
-    %  @return fullfile(subjectsDir, project, session, 'umapSynth_op_T1001_b43.4dfp.*').
+    %  @return fullfile(projectsDir, project, session, 'umapSynth_op_T1001_b43.4dfp.*').
     %  @return cell array of objects specified by mlraichle.TracerDirector2.constructUmaps().
     
     import mlsystem.* mlraichle.*; %#ok<NSTIMP>

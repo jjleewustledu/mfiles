@@ -3,22 +3,25 @@ function those = construct_resolved(varargin)
     %  Usage:  construct_resolved([projectsExpr, sessionsExpr, tracerExpr, ac])
     %  e.g.:   >> construct_resolved('CCIR_00123', 'ses-E0012*', 'OO_DT20190101*-Converted-NAC*')
     %  
-    %  @precondition fullfile(subjectsDir, project, session, 'umapSynth_op_T1001_b43.4dfp.*') and
-    %                         subjectsDir := getenv('SUBJECTS_DIR')
-    %  @precondition files{.bf,.dcm} in fullfile(subjectsDir, project, session, 'LM', '')
-    %  @precondition files{.bf,.dcm} in fullfile(subjectsDir, project, session, 'norm', '')
-    %  @precondition FreeSurfer recon-all results in fullfile(subjectsDir, project, session, 'mri', '')
+    %  @precondition fullfile(projectsDir, project, session, 'umapSynth_op_T1001_b43.4dfp.*') and
+    %                         projectsDir := getenv('PROJECTS_DIR')
+    %  @precondition files{.bf,.dcm} in fullfile(projectsDir, project, session, 'LM', '')
+    %  @precondition files{.bf,.dcm} in fullfile(projectsDir, project, session, 'norm', '')
+    %  @precondition FreeSurfer recon-all results in fullfile(projectsDir, project, session, 'mri', '')
     %
     %  @param projectsExpr is char, e.g., 'CCIR_00123' or globbed.
     %  @param sessionsExpr is char, e.g., 'ses-E01234' or globbed.
     %  @param tracerExpr   is char, e.g., 'FDG_DT20000101090000.000000-Converted-NAC' or globbed.
     %  @param ac           is logical or []; default := [].  
     %         Set to logical to constrain globbing attentuaion corection to '-NAC' or '-AC'.
-    %  @return results in fullfile(subjectsDir, project, session, tracer) 
+    %  @return results in fullfile(projectsDir, project, session, tracer) 
     %          for elements of projectsExpr, sessionsExpr and tracerExpr.
     %  @return cell array of objects specified by mlraichle.TracerDirector2.constructResolved().
     
     TRACERS = {'OC*' 'HO*' 'OO*' 'FDG*'}; 
+    
+    setenv('PROJECTS_DIR', '/scratch/jjlee/Singularity');
+    setenv('SUBJECTS_DIR', '/scratch/jjlee/Singularity/subjects');
         
     import mlsystem.* mlraichle.*; %#ok<NSTIMP>
     import mlpet.DirToolTracer;
@@ -89,6 +92,7 @@ function those = construct_resolved(varargin)
         sessd = SessionData( ...
             'studyData', RaichleRegistry.instance, ...
             'projectFolder', projf, ...
+            'subjectData', SubjectData(), ...
             'sessionFolder', sessf, ...
             'scanFolder', scanf);
         if (~isempty(ipr.fractionalImageFrameThresh))

@@ -20,8 +20,9 @@ function those = construct_resolved_00993(varargin)
     
     TRACERS = {'OC*' 'HO*' 'OO*'}; 
     
-    setenv('PROJECTS_DIR', '/scratch/jjlee/Singularity');
-    setenv('SUBJECTS_DIR', '/scratch/jjlee/Singularity/subjects_00993');
+    %% setenv PROJECTS_DIR is not compatible with Docker+Singularity
+    %  setenv('PROJECTS_DIR', '/scratch/jjlee/Singularity');
+    %  setenv('SUBJECTS_DIR', '/scratch/jjlee/Singularity/subjects_00993');
         
     import mlsystem.* mlan.*; %#ok<NSTIMP>
     import mlpet.DirToolTracer;

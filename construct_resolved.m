@@ -9,19 +9,22 @@ function those = construct_resolved(varargin)
     %  @precondition files{.bf,.dcm} in fullfile(projectsDir, project, session, 'norm', '')
     %  @precondition FreeSurfer recon-all results in fullfile(projectsDir, project, session, 'mri', '')
     %
-    %  @param projectsExpr is char, e.g., 'CCIR_00123' or globbed.
+    %  @param projectsExpr is char, e.g., 'CCIR_00123' or globbed;
+    %         it may also contain two filesep instances, prompting an interpretation such that
+    %         projectsExpr == projectsExpr/sessionsExpr/tracerExp; sessionsExpr and tracerExpr will by consequently 
+    %         ignored.
     %  @param sessionsExpr is char, e.g., 'ses-E01234' or globbed.
-    %  @param tracerExpr   is char, e.g., 'FDG_DT20000101090000.000000-Converted-NAC' or globbed.
-    %  @param ac           is logical or []; default := [].  
+    %  @param tracersExpr is char, e.g., 'FDG_DT20000101090000.000000-Converted-NAC' or globbed.
+    %  @param ac is logical or []; default := [].  
     %         Set to logical to constrain globbing attentuaion corection to '-NAC' or '-AC'.
     %  @return results in fullfile(projectsDir, project, session, tracer) 
     %          for elements of projectsExpr, sessionsExpr and tracerExpr.
     %  @return cell array of objects specified by mlraichle.TracerDirector2.constructResolved().
+    %
+    %  N.B.:  Setting environment vars PROJECTS_DIR or SUBJECTS_DIR is not compatible with many Docker or Singularity
+    %         use cases.
     
     TRACERS = {'OC*' 'HO*' 'OO*' 'FDG*'}; 
-    
-    setenv('PROJECTS_DIR', '/scratch/jjlee/Singularity');
-    setenv('SUBJECTS_DIR', '/scratch/jjlee/Singularity/subjects');
         
     import mlsystem.* mlraichle.*; %#ok<NSTIMP>
     import mlpet.DirToolTracer;
@@ -29,7 +32,7 @@ function those = construct_resolved(varargin)
     ip.KeepUnmatched = true;
     addOptional( ip, 'projectsExpr', 'CCIR_*', @ischar);
     addOptional( ip, 'sessionsExpr', 'ses-*', @ischar);
-    addOptional( ip, 'tracer', TRACERS, @(x) ischar(x) || iscell(x));
+    addOptional( ip, 'tracersExpr', TRACERS, @(x) ischar(x) || iscell(x));
     addOptional( ip, 'ac', []);
     addParameter(ip, 'ignoreFinishMark', false, @islogical);
     addParameter(ip, 'frameAlignMethod', '', @ischar); % align_10243
@@ -41,15 +44,12 @@ function those = construct_resolved(varargin)
     sessExpr = ipr.sessionsExpr;
     those = {};
     
-    %reg = mlraichle.RaichleRegistry.instance();
-    %reg.debug = true;
-    
     dtproj = DirTools(fullfile(RaichleRegistry.instance.projectsDir, projExpr));
     for iproj = 1:length(dtproj.fqdns)
         dtsess = DirTools(fullfile(dtproj.fqdns{iproj}, sessExpr));
         for isess = 1:length(dtsess.fqdns)
             pwd0 = pushd(dtsess.fqdns{isess});
-            dttrac = DirToolTracer('tracer', ipr.tracer, 'ac', ipr.ac);
+            dttrac = DirToolTracer('tracer', ipr.tracersExpr, 'ac', ipr.ac);
             for itrac = 1:length(dttrac.fqdns)
                 try
                     sessd = constructSessionData(ipr, dtproj.dns{iproj}, dtsess.dns{isess}, dttrac.dns{itrac});
@@ -74,16 +74,23 @@ function those = construct_resolved(varargin)
 
     function ipr = adjustParameters(ipr)
         assert(isstruct(ipr));
-        results = {'projectsExpr' 'sessionsExpr' 'tracer'};
+        if lstrfind(ipr.projectsExpr, filesep)
+            ss = strsplit(ipr.projectsExpr, filesep);
+            assert(3 == length(ss));
+            ipr.projectsExpr = ss{1};
+            ipr.sessionsExpr = ss{2};
+            ipr.tracersExpr = ss{3};
+        end
+        results = {'projectsExpr' 'sessionsExpr' 'tracersExpr'};
         for r = 1:length(results)
             if (~lstrfind(ipr.(results{r}), '*'))
                 ipr.(results{r}) = [ipr.(results{r}) '*'];
             end
         end
-        if (ischar(ipr.ac))
+        if ischar(ipr.ac)
             ipr.ac = strcmpi(ipr.ac, 'true');
         end
-        if (ischar(ipr.fractionalImageFrameThresh))
+        if ischar(ipr.fractionalImageFrameThresh)
             ipr.fractionalImageFrameThresh = str2double(ipr.fractionalImageFrameThresh);            
         end
     end

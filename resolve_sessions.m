@@ -7,8 +7,10 @@ function resolve_sessions(varargin)
     %% developed on Matlab 9.5.0.1067069 (R2018b) Update 4.  Copyright 2019 John Joowon Lee. 
 
     import mlsystem.* mlraichle.*; %#ok<NSTIMP>
-    setenv('PROJECTS_DIR', '/scratch/jjlee/Singularity');
-    setenv('SUBJECTS_DIR', '/scratch/jjlee/Singularity/subjects');
+    
+    %% setenv PROJECTS_DIR is not compatible with Docker+Singularity
+    %  setenv('PROJECTS_DIR', '/scratch/jjlee/Singularity');
+    %  setenv('SUBJECTS_DIR', '/scratch/jjlee/Singularity/subjects');
             
     ip = inputParser;
     ip.KeepUnmatched = true;
@@ -19,7 +21,13 @@ function resolve_sessions(varargin)
     addParameter(ip, 'compAlignMethod', '', @ischar); % align_multiSpectral
     parse(ip, varargin{:});
     ipr = adjustParameters(ip.Results);
+
+    % aufbau symlinks in subjectPath/sessionFolder/TRACER_DT20190101000000.000000-Converted-AC to
+    % projectPath/sessionFolder/TRACER_DT20190101000000.000000-Converted-AC
+    %subjectData = mlraichle.SubjectData();
+    %subjectData.aufbauSubjectsDir();
     
+    % resolve tracers within sessionFolders
     dtsubj = DirTool2(fullfile(getenv('SUBJECTS_DIR'), ipr.subjectsExpr));
     for isubj = 1:length(dtsubj.fqdns)
         dtsess = DirTool2(fullfile(dtsubj.fqdns{isubj}, ipr.sessionsExpr));

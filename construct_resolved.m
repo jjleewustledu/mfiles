@@ -2,6 +2,7 @@ function those = construct_resolved(varargin)
     %% CONSTRUCT_RESOLVED supports t4_resolve for niftypet.  It is the top level of a Matlab Compiler Runtime project.
     %  Usage:  construct_resolved([projectsExpr, sessionsExpr, tracerExpr, ac])
     %  e.g.:   >> construct_resolved('CCIR_00123', 'ses-E0012*', 'OO_DT20190101*-Converted-NAC*')
+    %          >> construct_resolved('CCIR_00123/ses-E0012*/OO_DT20190101*-Converted-NAC*')
     %  
     %  @precondition fullfile(projectsDir, project, session, 'umapSynth_op_T1001_b43.4dfp.*') and
     %                         projectsDir := getenv('PROJECTS_DIR')

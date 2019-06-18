@@ -9,13 +9,5 @@ function bn = mybasename(str)
 
 [~,bn] = myfileparts(str);
 
-
-
-
-
-
-
-
-
 % Created with NEWFCN.m by Frank Gonzalez-Morphy (frank.gonzalez-morphy@mathworks.de) 
 % ===== EOF ====== [/Users/jjlee/Local/src/mlcvl/mfiles/mybasename.m] ======  

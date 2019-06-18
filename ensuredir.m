@@ -11,10 +11,10 @@ function theDir = ensuredir(varargin)
 %% Developed on Matlab 9.1.0.441655 (R2016b) 
 %% $Id$ 
 
-if (~isdir(fullfile(varargin{:})))
+if (~isfolder(fullfile(varargin{:})))
     try
         if (isempty(varargin{end}))
-            varargin1 = {varargin{1:end-1}};
+            varargin1 = {varargin{1:end-1}}; %#ok<CCAT1>
         else
             varargin1 = varargin;
         end

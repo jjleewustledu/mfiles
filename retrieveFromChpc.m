@@ -15,7 +15,7 @@ studyd = mlraichle.StudyData;
 for h = 1:length(hyglys)
     sessd = mlraichle.SessionData( ...
         'studyData', studyd, ...
-        'sessionPath', fullfile(mlraichle.RaichleRegistry.instance.subjectsDir, hyglys{h}, ''));
+        'sessionPath', fullfile(mlraichle.StudyRegistry.instance.subjectsDir, hyglys{h}, ''));
     t4rb = mlraichle.T4ResolveBuilder('sessionData', sessd);
     t4rb.retrieveNAC('visits', visits{h});
 end

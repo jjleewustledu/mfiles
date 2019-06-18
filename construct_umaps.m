@@ -25,7 +25,7 @@ function those = construct_umaps(varargin)
     sessExpr = ipr.sessionsExpr;
     those = {};
     
-    dtproj = DirTools(fullfile(RaichleRegistry.instance.projectsDir, projExpr));
+    dtproj = DirTools(fullfile(StudyRegistry.instance.projectsDir, projExpr));
     for iproj = 1:length(dtproj.fqdns)
         dtsess = DirTools(fullfile(dtproj.fqdns{iproj}, sessExpr));
         for isess = 1:length(dtsess.fqdns)
@@ -61,7 +61,7 @@ function those = construct_umaps(varargin)
     function sessd = constructSessionData(ipr, projf, sessf)
         import mlraichle.*;
         sessd = SessionData( ...
-            'studyData', RaichleRegistry.instance, ...
+            'studyData', StudyRegistry.instance, ...
             'projectFolder', projf, ...
             'sessionFolder', sessf);
         if (~isempty(ipr.compAlignMethod))

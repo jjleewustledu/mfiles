@@ -7,7 +7,7 @@ function [s,r] = chpc_check()
 %% Developed on Matlab 9.0.0.341360 (R2016a) 
 %% $Id$ 
 
-targ = mlraichle.RaichleRegistry.instance.subjectsDir;
+targ = mlraichle.StudyRegistry.instance.subjectsDir;
 [s,r] = mlbash(['du -h ' targ]);
 
 

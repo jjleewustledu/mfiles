@@ -23,7 +23,7 @@ mpr.fqfilename = roi.fqfilename;
 
 
 assert(mpr.rank == 3, 'rank(%s)->%i', mpr.fqfilename, mpr.rank);
-bnii = BlurringNIfTId(mpr, 'blur', mlpet.PETRegistry.instance.petPointSpread);
+bnii = BlurringNIfTId(mpr, 'blur', mlsiemens.ECATRegistry.instance.petPointSpread);
 thresh = max(max(max(bnii.img)))/10;
 bnii.img = double(bnii.img > thresh);
 assert(~strcmp(bnii.fileprefix, mpr.fileprefix));

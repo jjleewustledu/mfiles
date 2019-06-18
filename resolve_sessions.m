@@ -1,7 +1,8 @@
 function resolve_sessions(varargin)
-    %% RESOLVE_SESSIONS ... 
-    %  Usage:  resolve_sessions() 
-    %          ^ 
+    %% RESOLVE_SESSIONS     
+    %  @param aufbauSubjectsDir symlinks in subjectPath/sessionFolder/TRACER_DT20190101000000.000000-Converted-AC to
+    %  projectPath/sessionFolder/TRACER_DT20190101000000.000000-Converted-AC.
+    
     %% Version $Revision$ was created $Date$ by $Author$,  
     %% last modified $LastChangedDate$ and checked into repository $URL$,  
     %% developed on Matlab 9.5.0.1067069 (R2018b) Update 4.  Copyright 2019 John Joowon Lee. 
@@ -17,15 +18,17 @@ function resolve_sessions(varargin)
     addOptional( ip, 'subjectsExpr', 'sub-*', @ischar);
     addOptional( ip, 'sessionsExpr', 'ses-*', @ischar);
     addOptional( ip, 'ac', []);
+    addParameter(ip, 'aufbauSubjectsDir', []);
     addParameter(ip, 'ignoreFinishMark', false, @islogical);
     addParameter(ip, 'compAlignMethod', '', @ischar); % align_multiSpectral
     parse(ip, varargin{:});
     ipr = adjustParameters(ip.Results);
-
-    % aufbau symlinks in subjectPath/sessionFolder/TRACER_DT20190101000000.000000-Converted-AC to
-    % projectPath/sessionFolder/TRACER_DT20190101000000.000000-Converted-AC
-    %subjectData = mlraichle.SubjectData();
-    %subjectData.aufbauSubjectsDir();
+  
+    if ~isempty(ip.Results.aufbauSubjectsDir)
+        subjectData = mlraichle.SubjectData();
+        subjectData.aufbauSubjectsDir();
+        return
+    end
     
     % resolve tracers within sessionFolders
     dtsubj = DirTool2(fullfile(getenv('SUBJECTS_DIR'), ipr.subjectsExpr));
@@ -58,6 +61,12 @@ function resolve_sessions(varargin)
 
     function ipr = adjustParameters(ipr)
         assert(isstruct(ipr));
+        if lstrfind(ipr.subjectsExpr, filesep)
+            ss = strsplit(ipr.subjectsExpr, filesep);
+            assert(2 == length(ss));
+            ipr.subjectsExpr = ss{1};
+            ipr.sessionsExpr = ss{2};
+        end
         results = {'subjectsExpr' 'sessionsExpr'};
         for r = 1:length(results)
             if (~lstrfind(ipr.(results{r}), '*'))

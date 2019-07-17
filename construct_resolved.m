@@ -35,7 +35,7 @@ function those = construct_resolved(varargin)
     addOptional( ip, 'sessionsExpr', 'ses-*', @ischar);
     addOptional( ip, 'tracersExpr', TRACERS, @(x) ischar(x) || iscell(x));
     addOptional( ip, 'ac', []);
-    addParameter(ip, 'ignoreFinishMark', false, @islogical);
+    addParameter(ip, 'ignoreFinishMark', true, @islogical);
     addParameter(ip, 'frameAlignMethod', '', @ischar); % align_10243
     addParameter(ip, 'compAlignMethod', '', @ischar); % align_multiSpectral
     addParameter(ip, 'fractionalImageFrameThresh', [], @(x) isnumeric(x) || ischar(x));
@@ -60,7 +60,8 @@ function those = construct_resolved(varargin)
                     fprintf(['\tsessd.TracerLocation->' sessd.tracerLocation '\n']);
                     
                     warning('off', 'MATLAB:subsassigndimmismatch');
-                    those{isess,itrac} = TracerDirector2.constructResolved('sessionData', sessd);  %#ok<AGROW>
+                    %those{isess,itrac} = 
+                    TracerDirector2.constructResolved('sessionData', sessd);  %#ok<AGROW>
                     warning('on',  'MATLAB:subsassigndimmismatch');
                 catch ME
                     dispwarning(ME)
@@ -99,7 +100,7 @@ function those = construct_resolved(varargin)
         import mlraichle.*;
         sessd = SessionData( ...
             'studyData', StudyRegistry.instance, ...
-            'projectFolder', projf, ...
+            'projectData', ProjectData('sessionStr', sessf), ...
             'subjectData', SubjectData(), ...
             'sessionFolder', sessf, ...
             'scanFolder', scanf);
@@ -113,7 +114,7 @@ function those = construct_resolved(varargin)
             sessd.compAlignMethod = ipr.compAlignMethod;
         end
         if (~isempty(ipr.ignoreFinishMark))
-            sessd.ignoreFinishMark = true;
+            sessd.ignoreFinishMark = ipr.ignoreFinishMark;
         end
     end    
 end

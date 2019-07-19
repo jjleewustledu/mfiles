@@ -19,7 +19,7 @@ function [s,r] = mlbash(cmdline, varargin)
     addParameter(ip, 'logger', [],        @(x) isa(x, 'mlpipeline.ILogger'));
     addParameter(ip, 'echo', false,       @islogical);     
     parse(ip, cmdline, varargin{:});    
-    s = 0; r = '';
+    s = 0; r = ''; %#ok<NASGU>
     
     if ~isempty(ip.Results.diaryFilename)
         [s,r] = mlbashDiary(cmdline, ip.Results.diaryFilename);

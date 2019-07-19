@@ -1,44 +1,53 @@
-function deleteExisting(obj)
+function deleteExisting(obj, varargin)
+%% DELETEEXISTING supports Matlab delete for wild cards of glob.  
+%  It also supports cell arrays, mlfourd.INIfTI, mlfourd.HandleINIfTI, mlfourd.HandleNIfTIIO.
+%  @param required obj to delete, e.g. obj_file.nii.gz.
+%  @param log is char extension of log files to also delete, e.g., delete obj_file.log and obj_file.nii.gz.
+%
+%  Copyright 2019 John J. Lee.
 
+    ip = inputParser;
+    addParameter(ip, 'log', '.log', @ischar)
+    parse(ip, varargin{:})    
     if (isempty(obj))
         return
     end
     
-    % recursion for cell, mlfourd.INIfTI
+    %% recursions for objects
+    
     if (iscell(obj))
         cellfun(@(x) deleteExisting(x), obj, 'UniformOutput', false);
         return
     end
-    if (isa(obj, 'mlfourd.INIfTI'))
+    if (isa(obj, 'mlfourd.INIfTI') || isa(obj, 'mlfourd.HandleINIfTI') || isa(obj, 'mlfourd.HandleNIfTIIO'))
         deleteExisting(obj.fqfilename);
         return
     end
     
+    %% base case
+    
     assert(ischar(obj));   
-    
-    % recursion for wild '*', '.4dfp'
-    if (lstrfind(obj, '*'))
-        dt = mlsystem.DirTool(obj);
-        if (dt.length < 1); return; end
-        deleteExisting(dt.fqfns);
-        return
+    for g = asrow(glob(obj))
+        if isempty(g)
+            return
+        end
+        try
+            if isfile(g{1})
+                delete(g{1})
+            end
+            if ~isempty(ip.Results.log)
+                deleteExisting(logfn(g{1}, ip.Results));
+            end
+        catch ME            
+            handexcept(ME, 'mfiles:RuntimeError', 'deleteExisting(%s)', g{1})
+        end
     end
     
-    % base case
-    try
-        if (lexist(obj))
-            delete(obj);
-        end
-        lgfn = logfn(obj);
-        if (lexist(lgfn))
-            delete(lgfn);
-        end
-    catch ME
-        dispexcept(ME);
-    end
-    function fn_ = logfn(fn_)
-        [p,f,~] = myfileparts(fn_);
-        fn_ = fullfile(p, [f '.log']);
+    %% internal 
+    
+    function fn_ = logfn(fn_, ipr)
+        [p,f] = myfileparts(fn_);
+        fn_ = fullfile(p, [f ipr.log]);
     end
 end
 

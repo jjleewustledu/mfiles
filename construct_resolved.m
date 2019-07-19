@@ -34,11 +34,12 @@ function those = construct_resolved(varargin)
     addOptional( ip, 'projectsExpr', 'CCIR_*', @ischar);
     addOptional( ip, 'sessionsExpr', 'ses-*', @ischar);
     addOptional( ip, 'tracersExpr', TRACERS, @(x) ischar(x) || iscell(x));
-    addOptional( ip, 'ac', []);
+    addParameter(ip, 'ac', []);
     addParameter(ip, 'ignoreFinishMark', true, @islogical);
     addParameter(ip, 'frameAlignMethod', '', @ischar); % align_10243
     addParameter(ip, 'compAlignMethod', '', @ischar); % align_multiSpectral
     addParameter(ip, 'fractionalImageFrameThresh', [], @(x) isnumeric(x) || ischar(x));
+    addParameter(ip, 'reconstructLastEpoch', false, @islogical)
     parse(ip, varargin{:});
     ipr = adjustParameters(ip.Results);
     projExpr = ipr.projectsExpr;
@@ -60,8 +61,9 @@ function those = construct_resolved(varargin)
                     fprintf(['\tsessd.TracerLocation->' sessd.tracerLocation '\n']);
                     
                     warning('off', 'MATLAB:subsassigndimmismatch');
-                    %those{isess,itrac} = 
-                    TracerDirector2.constructResolved('sessionData', sessd);  %#ok<AGROW>
+                    those{isess,itrac} = TracerDirector2.constructResolved( ...
+                        'sessionData', sessd, ...
+                        'reconstructLastEpoch', ipr.reconstructLastEpoch);  %#ok<AGROW>
                     warning('on',  'MATLAB:subsassigndimmismatch');
                 catch ME
                     dispwarning(ME)

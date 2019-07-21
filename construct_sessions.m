@@ -38,12 +38,11 @@ function construct_sessions(subFolder, varargin)
     end
     
     pwd0 = pushd(subPath);
-    dt = DirTool('ses-*');
+    dt = DirTool(ip.Results.sessionPattern);
     for ses = dt.dns
         
         pwd1 = pushd(ses{1});
-        dt1 = DirTool('*_DT*.000000-Converted-AC');
-        if ~isempty(dt1.dns) 
+        if mlpet.SessionResolveBuilder.validTracerSession(ip.Results)
             sesData = SessionData( ...
                 'studyData', StudyData(), ...
                 'projectData', ProjectData('sessionStr', ses{1}), ...

@@ -39,6 +39,7 @@ function those = construct_resolved_00993(varargin)
     addParameter(ip, 'frameAlignMethod', '', @ischar); % align_10243
     addParameter(ip, 'compAlignMethod', '', @ischar); % align_multiSpectral
     addParameter(ip, 'fractionalImageFrameThresh', [], @(x) isnumeric(x) || ischar(x));
+    addParameter(ip, 'reconstructLastEpoch', true, @islogical)
     parse(ip, varargin{:});
     ipr = adjustParameters(ip.Results);
     projExpr = ipr.projectsExpr;
@@ -64,7 +65,9 @@ function those = construct_resolved_00993(varargin)
                     
                     warning('off', 'MATLAB:subsassigndimmismatch');
                     TracerDirector2.constructUmaps('sessionData', sessd, 'umapType', reg.umapType);
-                    those{isess,itrac} = TracerDirector2.constructResolved('sessionData', sessd);  %#ok<AGROW>
+                    those{isess,itrac} = TracerDirector2.constructResolved( ...
+                        'sessionData', sessd, ...
+                        'reconstructLastEpoch', ipr.reconstructLastEpoch);  %#ok<AGROW>
                     warning('on',  'MATLAB:subsassigndimmismatch');
                 catch ME
                     dispwarning(ME)

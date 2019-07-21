@@ -59,6 +59,15 @@ function construct_sessions(subFolder, varargin)
         popd(pwd1)
     end
     popd(pwd0)
+    function sid = subFolder2subID(sdata, sfold)
+        json = sdata.subjectsJson;
+        for an_sid = asrow(fields(json))
+            if lstrfind(json.(an_sid{1}).sid, sfold(5:end))
+                sid = an_sid{1};
+                return
+            end
+        end
+    end
 
 % Created with NEWFCN.m by Frank Gonzalez-Morphy (frank.gonzalez-morphy@mathworks.de) 
 % ===== EOF ====== [/Users/jjlee/MATLAB-Drive/mfiles/construct_sessions.m] ======  

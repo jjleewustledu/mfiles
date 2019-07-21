@@ -49,8 +49,9 @@ function construct_sessions(subFolder, varargin)
                 'subjectData', SubjectData('subjectFolder', subFolder), ...
                 'sessionFolder', ses{1}, ...
                 'tracer', 'FDG', ...
-                'ac', true); % referenceTracer
-            srb = mlpet.SessionResolveBuilder('sessionData', sesData);
+                'ac', true); % referenceTracer         
+            %mlpet.SessionResolveBuilder.makeClean()
+            srb = mlpet.SessionResolveBuilder('sessionData', sesData);   
             if ~srb.isfinished
                 srb.align;
             end

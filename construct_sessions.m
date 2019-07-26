@@ -1,5 +1,3 @@
-function construct_sessions(subFolder)
-%% CONSTRUCT_SESSIONS ... 
 function construct_sessions(subFolder, varargin)
 %% CONSTRUCT_SESSIONS 
 %  @param required subFolder is a folder.
@@ -18,47 +16,53 @@ function construct_sessions(subFolder, varargin)
     
     ip = inputParser;
     addParameter(ip, 'aufbauSubjectsDir', false, @islogical);
-    addParameter(ip, 'aufbauSessionPath', false, @islogical);
+    addParameter(ip, 'aufbauSessionPath', true, @islogical);
     addParameter(ip, 'experimentPattern', '_E', @ischar)
-    addParameter(ip, 'sessionPattern', 'ses-*', @ischar)
-    addParameter(ip, 'tracerPattern', 'FDG_DT*.000000-Converted-AC', @ischar)
+    addParameter(ip, 'sessionPattern', 'ses-E*', @ischar)
+    addParameter(ip, 'makeClean', true, @islogical)
     parse(ip, varargin{:})
+    ipr = ip.Results;
     
-    if ip.Results.aufbauSubjectsDir
+    if ipr.aufbauSubjectsDir
         subjectData = mlraichle.SubjectData();
         subjectData.aufbauSubjectsDir();
         return
     end
-    if ip.Results.aufbauSessionPath
+    if ipr.aufbauSessionPath
         subjectData = mlraichle.SubjectData('subjectFolder', subFolder);
         pth = fullfile(getenv('SUBJECTS_DIR'), subFolder);
         subID = subFolder2subID(subjectData, subFolder);
-        subjectData.aufbauSessionPath(pth, subjectData.subjectsJson.(subID), 'experimentPattern', ip.Results.experimentPattern);
-        return
+        subjectData.aufbauSessionPath(pth, subjectData.subjectsJson.(subID), 'experimentPattern', ipr.experimentPattern);
     end
     
     pwd0 = pushd(subPath);
-    dt = DirTool(ip.Results.sessionPattern);
+    dt = DirTool(ipr.sessionPattern);
     for ses = dt.dns
         
         pwd1 = pushd(ses{1});
-        if mlpet.SessionResolveBuilder.validTracerSession(ip.Results)
+        if mlpet.SessionResolveBuilder.validTracerSession(ipr)
             sesData = SessionData( ...
                 'studyData', StudyData(), ...
                 'projectData', ProjectData('sessionStr', ses{1}), ...
                 'subjectData', SubjectData('subjectFolder', subFolder), ...
                 'sessionFolder', ses{1}, ...
                 'tracer', 'FDG', ...
-                'ac', true); % referenceTracer         
-            %mlpet.SessionResolveBuilder.makeClean()
+                'ac', true); % referenceTracer   
+            if ipr.makeClean
+                mlpet.SessionResolveBuilder.makeClean()
+            end
             srb = mlpet.SessionResolveBuilder('sessionData', sesData);   
             if ~srb.isfinished
-                srb.align;
+                srb.align
             end
+            srb.t4_mul
         end
         popd(pwd1)
     end
     popd(pwd0)
+    
+    
+    
     function sid = subFolder2subID(sdata, sfold)
         json = sdata.subjectsJson;
         for an_sid = asrow(fields(json))

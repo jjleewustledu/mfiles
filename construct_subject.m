@@ -1,4 +1,4 @@
-function construct_subject(subFolder)
+function construct_subject(subFolder, varargin)
     %% CONSTRUCT_SUBJECT uses t4_resolve to co-register PET images for a subject.  It co-registers all iso-tracer images,
     %  then co-registers all inter-tracers images.
 
@@ -10,7 +10,10 @@ function construct_subject(subFolder)
     import mlsystem.DirTool
     setenv('PROJECTS_DIR', '/scratch/jjlee/Singularity')
     setenv('SUBJECTS_DIR', '/scratch/jjlee/Singularity/subjects')
-    subPath = fullfile(getenv('SUBJECTS_DIR'), subFolder, '');
+    ip = inputParser;
+    addParameter(ip, 'makeClean', true, @islogical)
+    parse(ip, varargin{:})
+    subPath = fullfile(getenv('SUBJECTS_DIR'), subFolder, '');    
     
     pwd0 = pushd(subPath);
     subData = SubjectData('subjectFolder', subFolder);
@@ -23,9 +26,14 @@ function construct_subject(subFolder)
         'tracer', 'FDG', ...
         'ac', true); % referenceTracer        
     srb = mlpet.SubjectResolveBuilder('subjectData', subData, 'sessionData', sesData);
-    if ~srb.isfinished
-        srb.align
+    if ip.Results.makeClean
+        srb.makeClean()
     end
+    if ~srb.isfinished()
+        srb.align()
+    end
+    srb.t4_mul()
+    srb.lns_json_all()
     popd(pwd0)
 
 % Created with NEWFCN.m by Frank Gonzalez-Morphy (frank.gonzalez-morphy@mathworks.de) 

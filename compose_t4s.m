@@ -44,7 +44,7 @@ function sub_struct = compose_t4s()
         for itra = 1:length(sub_struct.tra_struct.(tra{1}))
             t4sub = sub_struct.tra_struct.(tra{1}){itra};
             [sesfold,t4ses] = find_sesfold_and_t4ses(t4sub, sub_struct, tra{1});
-            fv.t4_mul(t4sub, fullfile(sesfold, t4ses), t4_ses2sub(t4sub))
+            fv.t4_mul(fullfile(sesfold, t4ses), t4sub, t4_ses2sub(t4sub))
             fv.t4_mul(t4_ses2sub(t4sub), 'fdg_avgr1_to_T1001r1_t4', ...
                       fullfile('resampling_restricted', [tracerdt(t4sub) '_to_T1001_t4']))
         end   

@@ -38,7 +38,11 @@ function sub_struct = compose_t4s()
     % compose t4s:  tracer -> session -> subject -> T1001
 
     fv = mlfourdfp.FourdfpVisitor;
+    %if ~isempty(glob('resampling_restricted/*'))
+    %    system('rm -f resampling_restricted/*');
+    %end
     ensuredir('resampling_restricted')
+    copyfile('*.json', 'resampling_restricted', 'f')
     tracers = {'fdg' 'ho' 'oo' 'oc'};
     for tra = tracers
         for itra = 1:length(sub_struct.tra_struct.(tra{1}))
@@ -52,7 +56,7 @@ function sub_struct = compose_t4s()
 end
 
 
-function [sesfold,t4] = find_sesfold_and_t4ses(sub_t4, sub_struct, tra)
+function [sesfold,t4] = find_sesfold_and_t4ses__(sub_t4, sub_struct, tra)
     %% @return sesfolder and t4 filename
     for ses = asrow(fields(sub_struct.ses_struct))       
         assert(~isempty(sub_struct.ses_struct.(ses{1}).tra_struct.(tra)), ...
@@ -96,7 +100,7 @@ function [sesfold,t4] = find_sesfold_and_t4ses_(sub_t4, sub_struct, tra)
         end
     end
 end
-function [sesfold,t4] = find_sesfold_and_t4ses__(sub_t4, sub_struct, tra)
+function [sesfold,t4] = find_sesfold_and_t4ses(sub_t4, sub_struct, tra)
     for ses = asrow(fields(sub_struct.ses_struct))
         for tdt = asrow(sub_struct.ses_struct.(ses{1}).tra_struct.(tra)) % special for fdg
             if strcmpi(tra, 'fdg') && lstrfind(tracerpref(sub_t4), fdgdt(ses{1}))

@@ -4,17 +4,14 @@ function construct_resolved(varargin)
     %          e.g.:  >> construct_resolved('CCIR_00123/ses-E00123/OO_DT20190101.000000-Converted-NAC')    
     %          e.g.:  >> construct_resolved('CCIR_00123/ses-E0012*/OO_DT*-Converted-NAC')
     %  
-    %  @precondition fullfile(projectsDir, project, session, 'umapSynth_op_T1001_b43.4dfp.*') and
-    %                         projectsDir := getenv('PROJECTS_DIR')
-    %  @precondition files{.bf,.dcm} in fullfile(projectsDir, project, session, 'LM', '')
-    %  @precondition files{.bf,.dcm} in fullfile(projectsDir, project, session, 'norm', '')
-    %  @precondition FreeSurfer recon-all results in fullfile(projectsDir, project, session, 'mri', '')
-    %
+    %  @precondition fullfile(projectsDir, project, session, 'umapSynth_op_T1001_b43.4dfp.*').
+    %  @precondition files{.bf,.dcm} in fullfile(projectsDir, project, session, 'LM', '').
+    %  @precondition files{.bf,.dcm} in fullfile(projectsDir, project, session, 'norm', '').
+    %  @precondition FreeSurfer recon-all results in fullfile(projectsDir, project, session, 'mri', '').
     %  @param foldersExpr is char.
-    %  @return results in fullfile(projectsDir, project, session, tracer) 
-    %          for elements of projectsExpr, sessionsExpr and tracerExpr.
+    %  @return results in <folders experssion>.
     %
-    %  N.B.:  Setting environment vars PROJECTS_DIR or SUBJECTS_DIR is not compatible with many Docker or Singularity
+    %  N.B.:  Setting environment vars PROJECTS_DIR or SUBJECTS_DIR may not be compatible with Docker or Singularity
     %         use cases.    
 
     ss = strsplit(varargin{1}, filesep);

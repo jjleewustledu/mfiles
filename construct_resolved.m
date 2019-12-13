@@ -23,6 +23,7 @@ function construct_resolved(varargin)
             mlan.TracerDirector2.constructResolvedStudy(varargin{:})
             
         case 'subjects'
+            setenv('SUBJECTS_DIR', fullfile(getenv('PROJECTS_DIR'), 'subjects'))
             if length(ss) > 1 && lstrfind(ss{2}, 'sub')
                 if length(ss) > 2 && lstrfind(ss{3}, 'ses')
                     mlraichle.TracerDirector2.constructSessionsStudy(varargin{:})
@@ -33,7 +34,8 @@ function construct_resolved(varargin)
             end
             warning('mfiles:RuntimeWarning', 'construct_resolved:  nothing to do')
             
-        case 'subjects_00993'            
+        case 'subjects_00993'
+            setenv('SUBJECTS_DIR', fullfile(getenv('PROJECTS_DIR'), 'subjects_00993'))
             mlan.TracerDirector2.constructSessionsStudy(varargin{:})
             
         otherwise

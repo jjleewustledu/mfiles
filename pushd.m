@@ -8,12 +8,9 @@ function pwd0 = pushd(pwd1)
 %% Developed on Matlab 9.1.0.441655 (R2016b) 
 %% $Id$ 
 
-if isempty(pwd1)
+if isempty(pwd1) || ~isfolder(pwd1)
     pwd0 = pwd;
     return
-end
-if ~isfolder(pwd1)
-    error('mfiles:RuntimeWarning', 'pushd(%s): No such file or directory', pwd1)
 end
 pwd0 = pwd;
 cd(pwd1);

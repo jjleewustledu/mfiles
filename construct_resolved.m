@@ -36,7 +36,18 @@ function construct_resolved(varargin)
             
         case 'subjects_00993'
             setenv('SUBJECTS_DIR', fullfile(getenv('PROJECTS_DIR'), 'subjects_00993'))
-            mlan.TracerDirector2.constructSessionsStudy(varargin{:})
+            if 1 == length(ss)
+                mlan.TracerDirector2.constructSuvrStudy(varargin{:})
+            end
+            if length(ss) > 1 && lstrfind(ss{2}, 'sub')
+                if length(ss) > 2 && lstrfind(ss{3}, 'ses')
+                    mlan.TracerDirector2.constructSessionsStudy(varargin{:})
+                    return
+                end
+                mlan.TracerDirector2.constructSubjectsStudy(varargin{:})
+                return
+            end
+            warning('mfiles:RuntimeWarning', 'construct_resolved:  nothing to do')
             
         otherwise
             error('mfiles:RuntimeError', 'construct_resolved.ss{1}->%s', ss{1})

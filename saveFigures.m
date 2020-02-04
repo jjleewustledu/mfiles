@@ -13,7 +13,7 @@ function saveFigures(varargin)
     parse(ip, varargin{:});
 
     pwd0 = pwd;
-    if (~isdir(ip.Results.location)); mkdir(ip.Results.location); end
+    if (~isfolder(ip.Results.location)); mkdir(ip.Results.location); end
     cd(ip.Results.location);
     theFigs = get(0, 'children');
     N = numel(theFigs);

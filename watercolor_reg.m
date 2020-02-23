@@ -448,6 +448,9 @@ end
 
 %scale mass by 1/Vgrid_range since narrower grid means more mass in
 %each grid cell
+if size(Vmasses,1) ~= size(Vmasses,2)
+    Vmasses = Vmasses(1:Vbins, 1:Nbins);
+end
 Vmasses_scaled = Vmasses.*repmat(1./Vranges,Vbins,1);
 
 %to prevent NaNs from crashing the plot_colored_fill function

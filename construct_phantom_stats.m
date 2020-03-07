@@ -12,9 +12,11 @@ for proj = globFoldersT('CCIR_00*')
     for ses = globFoldersT('ses-E*')
         pwd1 = pushd(ses{1});
         fdgs = globFoldersT('FDG_DT*-Converted-*');
-        loc = fullfile(proj{1}, ses{1}, fdgs{end});
-        construct_phantom(loc, 'getstats', true)        
-        popd(pwd1)
+        if ~isempty(fdgs)
+            loc = fullfile(proj{1}, ses{1}, fdgs{end});
+            construct_phantom(loc, 'getstats', true);
+        end
+        popd(pwd1);
     end
     popd(pwd0)
 end

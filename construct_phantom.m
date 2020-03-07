@@ -7,7 +7,7 @@ function construct_phantom(varargin)
     %  @param foldersExpr is char.
     %  @return fullfile(<folders expression>, 'umapSynth.nii.gz') for phantom.
     
-    mlraichle.TracerDirector2.constructPhantomStudy(varargin{:})
+    mlraichle.TracerDirector2.constructPhantomStudy(varargin{:});
 end
 
 % Created with NEWFCN.m by Frank Gonzalez-Morphy (frank.gonzalez-morphy@mathworks.de) 

@@ -12,11 +12,9 @@ ip = inputParser;
 addRequired(ip, 't',  @isnumeric);
 addRequired(ip, 'f',  @isnumeric);
 addRequired(ip, 'dt', @isnumeric);
-addOptional(ip, 'resizable', true, @islogical);
 parse(ip, t, f, dt, varargin{:});
 
-tt = mlsystem.TensorTools(ip.Results.resizable);
-[t,f] = tt.shiftTensor(t, f, dt);
+[t,f] = mlsystem.TensorTools.shiftTensor(t, f, dt);
 
 
 

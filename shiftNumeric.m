@@ -8,6 +8,10 @@ function [t,f] = shiftNumeric(t, f, dt, varargin)
 %% Developed on Matlab 9.1.0.441655 (R2016b) 
 %% $Id$ 
 
+if isscalar(t) && isscalar(f)
+    return
+end
+f = double(f);
 if (isvector(f))
     [t,f] = shiftVector(t, f, dt, varargin{:});
 else

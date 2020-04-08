@@ -12,11 +12,9 @@ ip = inputParser;
 addRequired(ip, 't',  @isvector);
 addRequired(ip, 'f',  @isvector);
 addRequired(ip, 'dt', @isnumeric);
-addOptional(ip, 'resizable', true, @islogical);
 parse(ip, t, f, dt, varargin{:});
 
-vt = mlsystem.VectorTools(ip.Results.resizable);
-[t,f] = vt.shiftVector(t, f, dt);
+[t,f] = mlsystem.VectorTools.shiftVector(t, f, dt);
 
 
 

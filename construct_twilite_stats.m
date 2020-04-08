@@ -11,7 +11,7 @@ WATER_DENSITY = 0.9982; % g / mL
 
 cd(getenv('CCIR_RAD_MEASUREMENTS_DIR'))
 for xlsx = globT('CCIRRadMeasurements*.xlsx')
-    crm = mlpet.CCIRRadMeasurements.createByFilename(xlsx{1});
+    crm = mlpet.CCIRRadMeasurements.createFromFilename(xlsx{1});
     dt0 = crm.mMR{1, 'scanStartTime_Hh_mm_ss'};
     dstr = datestr(datetime(crm), 'yyyyMMdd');
     

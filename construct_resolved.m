@@ -23,6 +23,8 @@ function construct_resolved(varargin)
             mlan.TracerDirector2.constructResolvedStudy(varargin{:})
             
         case 'subjects'
+            warning('off', 'mfiles:ChildProcessError')
+            warning('off', 'MATLAB:cellRefFromNonCell')
             setenv('SUBJECTS_DIR', fullfile(getenv('PROJECTS_DIR'), 'subjects'))
             if length(ss) > 1 && lstrfind(ss{2}, 'sub')
                 if length(ss) > 2 && lstrfind(ss{3}, 'ses')

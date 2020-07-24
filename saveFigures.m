@@ -10,19 +10,21 @@ function saveFigures(varargin)
     ip = inputParser;
     addOptional(ip, 'location', pwd, @ischar);
     addParameter(ip, 'closeFigure', true, @islogical);
+    addParameter(ip, 'prefix', '', @ischar)
     parse(ip, varargin{:});
+    ipr = ip.Results;
 
     pwd0 = pwd;
-    if (~isfolder(ip.Results.location)); mkdir(ip.Results.location); end
-    cd(ip.Results.location);
+    if (~isfolder(ipr.location)); mkdir(ipr.location); end
+    cd(ipr.location);
     theFigs = get(0, 'children');
     N = numel(theFigs);
     assert(N < 1000, 'saveFigures only supports up to 999 open figures');
     for f = 1:N
         aFig = theFigs(f);
         figure(aFig);
-        saveas(aFig, sprintf('%03d.fig', N-f+1));
-        saveas(aFig, sprintf('%03d.png', N-f+1));
+        saveas(aFig, sprintf('%s%03d.fig', ipr.prefix, N-f+1));
+        saveas(aFig, sprintf('%s%03d.png', ipr.prefix, N-f+1));
         if (ip.Results.closeFigure); close(aFig); end
     end
     cd(pwd0);

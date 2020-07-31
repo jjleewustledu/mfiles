@@ -7,6 +7,7 @@ function handwarning(exc, varargin)
 assert(isa(exc, 'MException'));
 warning('on', 'verbose')
 warning('on', 'backtrace')
+disp(ME)
 warning(exc.identifier, exc.message);
 if (~isempty(varargin))
     warning(varargin{:})

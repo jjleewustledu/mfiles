@@ -9,6 +9,7 @@ warning('on', 'verbose')
 warning('on', 'backtrace')
 
 disp(exc.identifier)
+disp(struct2str(exc.stack(1)))
 warning(exc.identifier, exc.message);
 if (~isempty(varargin))
     warning(varargin{:})

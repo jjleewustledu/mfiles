@@ -47,7 +47,7 @@ end
 
 parfor (p = 1:length(filesys), Nthreads)    
     try
-        [ks, msk] = AerobicGlycolysisKit.constructKsByWmparc( ...
+        [ks, msk] = AerobicGlycolysisKit.constructKsByWmparc1( ...
             fullfile('subjects', filesys(p).sub), [], 'sessionsExpr', filesys(p).ses); % memory ~ 5.5 GB
         ksc = AerobicGlycolysisKit.iccrop(ks, 1:4);
         AerobicGlycolysisKit.ic2mat(ksc)

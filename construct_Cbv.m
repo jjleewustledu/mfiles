@@ -38,8 +38,11 @@ function construct_Cbv(varargin)
                             cbv = kit.buildCbv( ...
                                 'filesExpr', fullfile('subjects', ss{2}, 'resampling_restricted', tracerOnAtlas), ...
                                 'averageVoxels', false);
-                            ocSignalAveraged.img = ocSignalAveraged.img + cbv.fourdfp.img;
-                            ocCount = ocCount + 1;
+                            
+                            if ~dipisnan(cbv)
+                                ocSignalAveraged.img = ocSignalAveraged.img + cbv.fourdfp.img;
+                                ocCount = ocCount + 1;
+                            end
                         catch ME
                             handwarning(ME)
                         end

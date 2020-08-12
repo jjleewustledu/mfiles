@@ -2,6 +2,7 @@ function construct_Ks_wmparc1(subjectsExpr, Nthreads)
 
 import mlraichle.*
 import mlraichle.AerobicGlycolysisKit.*
+import mlraichle.DispersedAerobicGlycolysisKit.*
 
 if ischar(Nthreads)
     Nthreads = str2double(Nthreads);
@@ -33,7 +34,7 @@ for sub = subjects
                 continue
             end
             fdg = sesd.fdgOnAtlas('typ', 'mlfourd.ImagingContext2');
-            AerobicGlycolysisKit.ic2mat(fdg)
+            DispersedAerobicGlycolysisKit.ic2mat(fdg)
             
             filesys(idx).sub = sub{1}; %#ok<AGROW>
             filesys(idx).ses = ses{1}; %#ok<AGROW>            
@@ -47,16 +48,16 @@ end
 
 parfor (p = 1:length(filesys), Nthreads)    
     try
-        [ks, msk] = AerobicGlycolysisKit.constructKsByWmparc1( ...
+        [ks, msk] = DispersedAerobicGlycolysisKit.constructKsByWmparc1( ...
             fullfile('subjects', filesys(p).sub), [], 'sessionsExpr', filesys(p).ses); % memory ~ 5.5 GB
-        ksc = AerobicGlycolysisKit.iccrop(ks, 1:4);
-        AerobicGlycolysisKit.ic2mat(ksc)
-        AerobicGlycolysisKit.ic2mat(msk)
+        ksc = DispersedAerobicGlycolysisKit.iccrop(ks, 1:4);
+        DispersedAerobicGlycolysisKit.ic2mat(ksc)
+        DispersedAerobicGlycolysisKit.ic2mat(msk)
         
-        [cmrglc,chi] = AerobicGlycolysisKit.constructCmrglc( ...
+        [cmrglc,chi] = DispersedAerobicGlycolysisKit.constructCmrglc( ...
             fullfile('subjects', filesys(p).sub), [], 'sessionsExpr', filesys(p).ses);
-        AerobicGlycolysisKit.ic2mat(chi)
-        AerobicGlycolysisKit.ic2mat(cmrglc)
+        DispersedAerobicGlycolysisKit.ic2mat(chi)
+        DispersedAerobicGlycolysisKit.ic2mat(cmrglc)
     catch ME
         handwarning(ME)
     end

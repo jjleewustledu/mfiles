@@ -34,6 +34,7 @@ for sub = subjects
                 continue
             end
             fdg = sesd.fdgOnAtlas('typ', 'mlfourd.ImagingContext2');
+            fdg = fdg.blurred(4.3);
             DispersedAerobicGlycolysisKit.ic2mat(fdg)
             
             filesys(idx).sub = sub{1}; %#ok<AGROW>

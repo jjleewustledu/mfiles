@@ -1,4 +1,5 @@
 function construct_Ks_wmparc1(subjectsExpr, Nthreads)
+%% e.g. construct_Ks_wmparc1('sub-S3*', 16)
 
 import mlraichle.*
 import mlraichle.AerobicGlycolysisKit.*
@@ -49,16 +50,15 @@ end
 
 parfor (p = 1:length(filesys), Nthreads)    
     try
-        [ks, msk] = DispersedAerobicGlycolysisKit.constructKsByWmparc1( ...
+        DispersedAerobicGlycolysisKit.constructKsByWmparc1( ...
             fullfile('subjects', filesys(p).sub), [], 'sessionsExpr', filesys(p).ses); % memory ~ 5.5 GB
-        ksc = DispersedAerobicGlycolysisKit.iccrop(ks, 1:4);
-        DispersedAerobicGlycolysisKit.ic2mat(ksc)
-        DispersedAerobicGlycolysisKit.ic2mat(msk)
         
-        [cmrglc,chi] = DispersedAerobicGlycolysisKit.constructCmrglc( ...
-            fullfile('subjects', filesys(p).sub), [], 'sessionsExpr', filesys(p).ses);
-        DispersedAerobicGlycolysisKit.ic2mat(chi)
-        DispersedAerobicGlycolysisKit.ic2mat(cmrglc)
+        [cmrglc,Ks,msk] = DispersedAerobicGlycolysisKit.constructCmrglc( ...
+            fullfile('subjects', filesys(p).sub), [], 'sessionsExpr', filesys(p).ses, 'regionTag', '_wmparc1');
+        Ksc = DispersedAerobicGlycolysisKit.iccrop(Ks, 1:4);
+        DispersedAerobicGlycolysisKit.ic2mat(Ksc)
+        DispersedAerobicGlycolysisKit.ic2mat(cmrglc)        
+        DispersedAerobicGlycolysisKit.ic2mat(msk)
     catch ME
         handwarning(ME)
     end

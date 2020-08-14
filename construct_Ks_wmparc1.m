@@ -30,7 +30,8 @@ for sub = subjects
                 'subjectData', subd, ...
                 'sessionFolder', ses{1}, ...
                 'tracer', 'FDG', ...
-                'ac', true);            
+                'ac', true, ...
+                'parcellation', 'wmparc1');            
             if sesd.datetime < mlraichle.StudyRegistry.instance.earliestCalibrationDatetime
                 continue
             end
@@ -39,7 +40,8 @@ for sub = subjects
             DispersedAerobicGlycolysisKit.ic2mat(fdg)
             
             filesys(idx).sub = sub{1}; %#ok<AGROW>
-            filesys(idx).ses = ses{1}; %#ok<AGROW>            
+            filesys(idx).ses = ses{1}; %#ok<AGROW>
+            filesys(idx).sesd = sesd; %#ok<AGROW>
             idx = idx + 1;
         catch ME
             handwarning(ME)
@@ -50,11 +52,9 @@ end
 
 parfor (p = 1:length(filesys), Nthreads)    
     try
-        DispersedAerobicGlycolysisKit.constructKsByWmparc1( ...
-            fullfile('subjects', filesys(p).sub), [], 'sessionsExpr', filesys(p).ses); % memory ~ 5.5 GB
+        DispersedAerobicGlycolysisKit.constructKsByWmparc1(filesys(p).sesd); % memory ~ 5.5 GB
         
-        [cmrglc,Ks,msk] = DispersedAerobicGlycolysisKit.constructCmrglc( ...
-            fullfile('subjects', filesys(p).sub), [], 'sessionsExpr', filesys(p).ses, 'regionTag', '_wmparc1');
+        [cmrglc,Ks,msk] = DispersedAerobicGlycolysisKit.constructCmrglc(filesys(p).sesd);
         Ksc = DispersedAerobicGlycolysisKit.iccrop(Ks, 1:4);
         DispersedAerobicGlycolysisKit.ic2mat(Ksc)
         DispersedAerobicGlycolysisKit.ic2mat(cmrglc)        

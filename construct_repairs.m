@@ -1,5 +1,5 @@
-function construct_Ks_wmparc1(subjectsExpr, Nthreads)
-%% e.g. construct_Ks_wmparc1('sub-S3*', 16)
+function construct_repairs(subjectsExpr, Nthreads)
+%% e.g. construct_repairs('sub-S3*', 16)
 
 import mlraichle.*
 import mlraichle.AerobicGlycolysisKit.*
@@ -35,24 +35,25 @@ for sub = subjects
             if sesd.datetime < mlraichle.StudyRegistry.instance.earliestCalibrationDatetime
                 continue
             end
-            fdgfn = sesd.fdgOnAtlas();
-            if ~isfile([myfileprefix(fdgfn) '_b43.mat'])
-                fdg = mlfourd.ImagingContext2(fdgfn);
-                fdg = fdg.blurred(4.3);
-                DispersedAerobicGlycolysisKit.ic2mat(fdg)
-            end
+%            fdg = sesd.fdgOnAtlas('typ', 'mlfourd.ImagingContext2');
+%            fdg = fdg.blurred(4.3);
+%            DispersedAerobicGlycolysisKit.ic2mat(fdg)
+            
+            filesys(idx).sub = sub{1}; %#ok<AGROW>
+            filesys(idx).ses = ses{1}; %#ok<AGROW>
             filesys(idx).sesd = sesd; %#ok<AGROW>
             idx = idx + 1;
         catch ME
-            handexcept(ME)
+            handwarning(ME)
         end
     end
     popd(pwd0)
 end
 
 parfor (p = 1:length(filesys), Nthreads)    
+%for p = 3:3
     try
-        DispersedAerobicGlycolysisKit.constructKsByWmparc1(filesys(p).sesd); % memory ~ 5.5 GB
+%        DispersedAerobicGlycolysisKit.constructKsByWmparc1(filesys(p).sesd); % memory ~ 5.5 GB
         
         [cmrglc,Ks,msk] = DispersedAerobicGlycolysisKit.constructCmrglc(filesys(p).sesd);
         Ksc = DispersedAerobicGlycolysisKit.iccrop(Ks, 1:4);

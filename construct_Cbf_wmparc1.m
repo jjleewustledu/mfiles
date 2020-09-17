@@ -58,6 +58,8 @@ for p = 1:length(filesys) % (p = 1:length(filesys), Nthreads)
     try
         DispersedAerobicGlycolysisKit.constructFsByRegion(filesys(p).sesd); % memory ~ 5.5 GB
         
+        return
+        
         [cbf,msk] = DispersedAerobicGlycolysisKit.constructCbf(filesys(p).sesd);
         Fsc = DispersedAerobicGlycolysisKit.iccrop(cbf, 1:3);
         DispersedAerobicGlycolysisKit.ic2mat(Fsc)

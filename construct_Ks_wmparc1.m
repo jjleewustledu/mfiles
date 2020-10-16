@@ -31,6 +31,7 @@ for sub = subjects
                 'sessionFolder', ses{1}, ...
                 'tracer', 'FDG', ...
                 'ac', true, ...
+                'metric', 'ks', ...
                 'region', 'wmparc1');            
             if sesd.datetime < mlraichle.StudyRegistry.instance.earliestCalibrationDatetime
                 continue
@@ -53,12 +54,6 @@ end
 parfor (p = 1:length(filesys), Nthreads)    
     try
         DispersedAerobicGlycolysisKit.constructKsByRegion(filesys(p).sesd); % memory ~ 5.5 GB
-        
-        [cmrglc,Ks,msk] = DispersedAerobicGlycolysisKit.constructCmrglc(filesys(p).sesd);
-        Ksc = DispersedAerobicGlycolysisKit.iccrop(Ks, 1:4);
-        DispersedAerobicGlycolysisKit.ic2mat(Ksc)
-        DispersedAerobicGlycolysisKit.ic2mat(cmrglc)        
-        DispersedAerobicGlycolysisKit.ic2mat(msk)
     catch ME
         handwarning(ME)
     end

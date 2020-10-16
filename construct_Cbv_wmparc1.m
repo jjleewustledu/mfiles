@@ -22,8 +22,8 @@ for sub = subjects
     subd = mlraichle.SubjectData('subjectFolder', sub{1});
     sesfs = subd.subFolder2sesFolders(sub{1});
 
-    ses = {sesfs{3}};
-%    for ses = sesfs
+%    ses = {sesfs{3}};
+    for ses = sesfs
         try
             sesd = SessionData( ...
                 'studyData', StudyData(), ...
@@ -50,11 +50,12 @@ for sub = subjects
         catch ME
             handexcept(ME)
         end
-%    end
+    end
     popd(pwd0)
 end
 
-for p = 1:length(filesys) % (p = 1:length(filesys), Nthreads)    
+% for p = 1:length(filesys) 
+parfor (p = 1:length(filesys), Nthreads)    
     try
         DispersedAerobicGlycolysisKit.constructCbvByRegion(filesys(p).sesd); % memory ~ 5.5 GB
         

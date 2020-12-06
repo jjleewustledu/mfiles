@@ -1,5 +1,5 @@
-function construct_Cbf_wmparc1(subjectsExpr, varargin)
-%% e.g. construct_Cbf_wmparc1('sub-S58163*', 16)
+function construct_Cbf_wholebrain(subjectsExpr, varargin)
+%% e.g. construct_Cbf_wholebrain('sub-S58163*', 16)
 
 import mlraichle.*
 import mlraichle.AerobicGlycolysisKit.*
@@ -8,7 +8,7 @@ import mlraichle.DispersedAerobicGlycolysisKit.*
 ip = inputParser;
 addRequired(ip, 'subjectsExpr', @ischar)
 addOptional(ip, 'Nthreads', @(x) isnumeric(x) || ischar(x))
-addParameter(ip, 'region', 'wmparc1', @ischar) % 'wbrain1'
+addParameter(ip, 'region', 'wholebrain', @ischar) % 'wbrain1'
 parse(ip, subjectsExpr, varargin{:})
 ipr = ip.Results;
 if ischar(ipr.Nthreads)
@@ -28,8 +28,8 @@ for sub = subjects
     subd = mlraichle.SubjectData('subjectFolder', sub{1});
     sesfs = subd.subFolder2sesFolders(sub{1});
 
-%    ses = {sesfs{3}};
-    for ses = sesfs
+    ses = {sesfs{3}};
+%    for ses = sesfs
         try
             sesd = SessionData( ...
                 'studyData', StudyData(), ...
@@ -56,14 +56,14 @@ for sub = subjects
         catch ME
             handexcept(ME)
         end
-    end
+%    end
     popd(pwd0)
 end
 
-% for p = 1:length(filesys) 
-parfor (p = 1:length(filesys), ipr.Nthreads)    
+for p = 1:length(filesys) 
+%parfor (p = 1:length(filesys), ipr.Nthreads)    
     try
-        DispersedAerobicGlycolysisKit.constructFsByRegion(filesys(p).sesd); % memory ~ 5.5 GB
+        DispersedAerobicGlycolysisKit.constructFsWholebrain(filesys(p).sesd); % memory ~ 5.5 GB
     catch ME
         handwarning(ME)
     end

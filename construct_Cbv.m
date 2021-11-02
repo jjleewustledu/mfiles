@@ -17,7 +17,7 @@ function construct_Cbv(varargin)
             for ses = globFoldersT('ses-E*')
                 
                 brainOnAtlas = fullfile(pwd, 'resampling_restricted', 'brain_222.4dfp.hdr');
-                mlraichle.AerobicGlycolysisKit.jitOn222(brainOnAtlas)
+                mlraichle.AerobicGlycolysisKit.jitOn111(brainOnAtlas)
                 ocSignalAveraged = mlfourd.ImagingFormatContext(brainOnAtlas);
                 ocSignalAveraged.img = zeros(size(ocSignalAveraged));
                 ocCount = 0;

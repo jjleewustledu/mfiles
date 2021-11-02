@@ -1,6 +1,6 @@
 function AugmentedAerobicGlycolysisKit_construct(varargin)
 %% AUGMENTEDAEROBICGLYCOLYSISKIT_CONSTRUCT ... 
-%  e.g.:  construct('cbv', 'subjectsExpr', 'sub-S58163*', 'Nthreads', 1, 'region', 'wholebrain')
+%  e.g.:  construct('cbv', 'subjectsExpr', 'sub-S58163*', 'Nthreads', 1, 'region', 'wmparc1')
 %  e.g.:  construct('cbv', 'debug', true)
 %  @param required physiolog is char, e.g., cbv, cbf, cmro2, cmrglc.
 %  @param subjectsExpr is char, e.g., 'sub-S58163*'.

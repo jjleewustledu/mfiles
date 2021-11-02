@@ -12,9 +12,9 @@ ipr = ip.Results;
 assert(isunix)
 home0 = getenv('HOME');
 setenv('HOME', '/home/usr/jjlee')
-setenv('SINGULARITY_HOME', '/data/nil-bluearc/raichle/PPGdata/jjlee/Singularity')
-setenv('PROJECTS_DIR', getenv('SINGULARITY_HOME'))
-setenv('SUBJECTS_DIR', fullfile(getenv('SINGULARITY_HOME'), 'subjects'))
+%setenv('SINGULARITY_HOME', '/data/nil-bluearc/raichle/PPGdata/jjlee/Singularity')
+%setenv('PROJECTS_DIR', getenv('SINGULARITY_HOME'))
+%setenv('SUBJECTS_DIR', fullfile(getenv('SINGULARITY_HOME'), 'subjects'))
 registry = MatlabRegistry.instance(); %#ok<NASGU>
 
 construct_Ks(['subjects' filesep ipr.sub], 1, 'sessionsExpr', ipr.ses, 'useParfor', true, 'assemble', true)

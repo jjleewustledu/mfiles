@@ -104,7 +104,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function s = CreateFcn(name)
 
-pth = fullfile(getenv('HOME'), 'MATLAB-Drive/mfiles');
+pth = fullfile(getenv('HOME'), 'MATLAB-Drive', 'mfiles', '');
 ext = '.m'; 
 filename = fullfile(pth, [name ext]);
 
@@ -113,30 +113,36 @@ fid = fopen(filename,'w');
 line_1 = ['function ',name,'()']; % Function Header
 
 h1 = ['%% ', upper(name), ' ...'];   % HELP-Line's will be preset
-h3 = ['%  Usage:  ',name,'()'];
-h4 =  '%          ^';
+h2 =  '%  Args:';
+h3 =  '%      arg_name (arg_class):  Description of arg.';
+h4 =  '%  Returns:';
+h5 =  '%      returned_name:  Description of returned.';
+h6 =  '%';
 
-fprintf(fid,'%s\n', line_1);    % First 5 Lines will be write in file
-fprintf(fid,'%s \n', h1);       %   "
-fprintf(fid,'%s \n', h3);       %   "
-fprintf(fid,'%s \n', h4);       %   "
+fprintf(fid,'%s\n', line_1);    % First 7 Lines will be write in file
+fprintf(fid,'%s\n', h1);       %   "
+fprintf(fid,'%s\n', h2);       %   "
+fprintf(fid,'%s\n', h3);       %   "
+fprintf(fid,'%s\n', h4);       %   "
+fprintf(fid,'%s\n', h5);       %   "
+fprintf(fid,'%s\n', h6);       %   "
 
 % Writer settings will be consructed ...
 filenamesaved = filename;     
 
-% Line 5-10 will be write in File ...
-fprintf(fid,'%s \n',         '%% Version $Revision$ was created $Date$ by $Author$, ');
-fprintf(fid,'%s \n',         '%% last modified $LastChangedDate$ and checked into repository $URL$, ');
-fprintf(fid,'%s%s%s%i%s \n', '%% developed on Matlab ', version, '.  Copyright ', datetime('today').Year, ' John Joowon Lee.');
+% Line 8-12 will be write in File ...
+fprintf(fid,'%%  Created %s by %s in repository\n', datestr(now), getenv('USER'));
+fprintf(fid,'%%  %s.\n', pth);
+fprintf(fid,'%%  Developed on Matlab %s for %s.  Copyright %i John J. Lee.\n\n', version, computer, datetime('today').Year);
 
 % Reminder that user must enter code in created File / Function
-lst = 'error('' !!!  You must enter code into this file <';
+lst = 'error(''!!!  You must enter code into this file <';
 lst_3 = '> !!!'')';
 fprintf(fid,'%s %s.m %s \n', lst, name, lst_3);
 
 % Before last line, from where functionality does come
 originl1 = '% Created with NEWFCN.m by Frank Gonzalez-Morphy (frank.gonzalez-morphy@mathworks.de)';
-fprintf(fid,'\n\n\n\n\n\n\n\n%s \n', originl1);
+fprintf(fid,'\n\n\n%s \n', originl1);
 
 % Last Line in the Fcn
 end_of_file = ['% ===== EOF ====== [', filenamesaved, '] ====== '];

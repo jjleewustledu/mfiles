@@ -8,9 +8,9 @@ function pwd1 = popd(pwd0)
 %% Developed on Matlab 9.1.0.441655 (R2016b) 
 %% $Id$ 
 
-pwd1 = pwd;
+pwd1 = pwd %#ok<NOPRT> 
 assert(isfolder(pwd0));
-cd(pwd0);
+cd(pwd0)
 
 % Created with NEWFCN.m by Frank Gonzalez-Morphy (frank.gonzalez-morphy@mathworks.de) 
 % ===== EOF ====== [/Users/jjlee/Local/src/mlcvl/mfiles/popd.m] ======  

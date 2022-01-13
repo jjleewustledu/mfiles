@@ -1,11 +1,20 @@
 function bn = mybasename(str)
-%% MYFILEPREFIX ... 
-%  @param str represents any filesystem string.
-%  @returns bn is an imaging fileprefix based on str, with removal of path and file extensions known by myfileparts.
-%% Version $Revision$ was created $Date$ by $Author$,  
-%% last modified $LastChangedDate$ and checked into svn repository $URL$ 
-%% Developed on Matlab 9.0.0.307022 (R2016a) Prerelease 
-%% $Id$ 
+%% MYBASENAME 
+%  Args:
+%      str (text): represents any filesystem string.
+%  Returns:
+%      bn: is a basename extracted from str ~ '/path/to/basename.ext'.
+%  Usage:
+%      >> mybasename('/path/to/fileprefix.nii.gz')
+%      ans =
+%          'fileprefix'
+%     
+%      >> mybasename(["/path/to/filprefix.nii.gz" "/path/to/another/fileprefix.nii.gz"])
+%      ans = 
+%        1×2 string array
+%          "filprefix"    "fileprefix"
+%
+%  Developed on Matlab 9.0.0.307022 (R2016a) Prerelease 
 
 [~,bn] = myfileparts(str);
 

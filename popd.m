@@ -8,7 +8,7 @@ function pwd1 = popd(pwd0)
 %% Developed on Matlab 9.1.0.441655 (R2016b) 
 %% $Id$ 
 
-pwd1 = pwd %#ok<NOPRT> 
+pwd1 = pwd;
 assert(isfolder(pwd0));
 cd(pwd0)
 

@@ -13,7 +13,7 @@ function obj = ensureSafenameMgz(obj)
         obj = cellfun(@(x) ensureSafenameMgz(x), obj,  'UniformOutput', false);
         return
     end
-    if (isa(obj, 'mlio.IOInterface') || isa(obj, 'mlio.HandleIOInterface'))
+    if (isa(obj, 'mlio.IOInterface'))
         obj.fileprefix = ensureSafenameMgz(obj.fileprefix);
         return
     end

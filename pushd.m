@@ -9,13 +9,13 @@ function pwd0 = pushd(pwd1)
 %% $Id$ 
 
 if isempty(pwd1)
-    pwd0 = pwd %#ok<NOPRT> 
+    pwd0 = pwd;
     return
 end
 if ~isfolder(pwd1)
     error('mfiles:RuntimeError', 'pushd(%s): No such file or directory', pwd1)
 end
-pwd0 = pwd %#ok<NOPRT> 
+pwd0 = pwd;
 cd(pwd1)
 
 % Created with NEWFCN.m by Frank Gonzalez-Morphy (frank.gonzalez-morphy@mathworks.de) 

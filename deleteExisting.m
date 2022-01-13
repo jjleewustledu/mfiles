@@ -1,6 +1,6 @@
 function deleteExisting(obj, varargin)
 %% DELETEEXISTING supports Matlab delete for wild cards of glob.  
-%  It also supports cell arrays, mlfourd.INIfTI, mlfourd.HandleINIfTI, mlfourd.HandleNIfTIIO.
+%  It also supports cell arrays, mlfourd.INIfTI, mlfourd.HandleINIfTI.
 %  @param required obj to delete, e.g. obj_file.nii.gz.
 %  @param log is char extension of log files to also delete, e.g., delete obj_file.log and obj_file.nii.gz.
 %
@@ -19,14 +19,15 @@ function deleteExisting(obj, varargin)
         cellfun(@(x) deleteExisting(x), obj, 'UniformOutput', false);
         return
     end
-    if (isa(obj, 'mlfourd.INIfTI') || isa(obj, 'mlfourd.HandleINIfTI') || isa(obj, 'mlfourd.HandleNIfTIIO'))
+    if (isa(obj, 'mlfourd.INIfTI') || isa(obj, 'mlfourd.HandleINIfTI') || ...
+        isa(obj, 'mlio.IOInterface'))
         deleteExisting(obj.fqfilename);
         return
     end
     
     %% base case
     
-    assert(ischar(obj));   
+    assert(istext(obj));   
     for g = asrow(glob(obj))
         if isempty(g)
             return

@@ -9,7 +9,7 @@ function movefileExisting(varargin)
 
     ip = inputParser;
     addRequired(ip, 'source', @(x) iscell(x) | isa(x, 'mlfourd.ImagingContext') | ischar(x));
-    addOptional(ip, 'dest', '.', @isdir);
+    addOptional(ip, 'dest', '.', @isfolder);
     parse(ip, varargin{:});
     src = ip.Results.source;
     dst = ip.Results.dest;

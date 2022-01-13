@@ -11,7 +11,7 @@ function theDir = ensuredir(varargin)
 %% Developed on Matlab 9.1.0.441655 (R2016b) 
 %% $Id$ 
 
-if (~isfolder(fullfile(varargin{:})))
+if strlength(fullfile(varargin{:})) > 0 && ~isfolder(fullfile(varargin{:}))
     try
         if (isempty(varargin{end}))
             varargin1 = {varargin{1:end-1}}; %#ok<CCAT1>

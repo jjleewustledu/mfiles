@@ -8,7 +8,6 @@ function runtests_fsl()
 %% Developed on Matlab 7.12.0.635 (R2011a) 
 %% $Id$ 
 
-runtests mlsystem_xunit.Test_FilesystemRegistry;
 runtests mlfsl_xunit.Test_FslRegistry;
 runtests mlfsl_xunit.Test_FslBuilder;
 runtests mlfsl_xunit.Test_FlirtBuilder;

@@ -1,48 +1,72 @@
-function [pth,prefix,ext] = myfileparts(fstr)
-%% MYFILEPARTS extends fileparts to regard myfileparts.SUFFIXES as single file extensions.
-%  It protects trailing floating point numbers such as "/path/to/file_tagged_1.23".
-%  @param fstr is char or cell; cell with length == 1 is interpreted as char.
-%  @return pth.
-%  @return prefix.
-%  @return ext.
+function [pth,fp,x] = myfileparts(str)
+%% MYFILEPARTS extends fileparts to recognize multi-dotted SUFFIXES as file extensions.
+%  It also preserves trailing floating point numbers such as "/path/to/file_tagged_1.23".
+%  Args:
+%      str (text): may be a fully-qualified filename.
+%  Returns:
+%      pth: is the path matching the type of str.
+%      fp: is the file prefix matching the type of str.
+%      x: is the file extension matching the type of str.
+%  Usage:
+%     >> [a,b,c] = myfileparts('/path/to/fileprefix.nii.gz')
+%     a =
+%         '/path/to'
+%     b =
+%         'fileprefix'
+%     c =
+%         '.nii.gz'
+%     
+%     >> [a,b,c] = myfileparts({'/path/to/fileprefix1.nii.gz' '/path/to/fileprefix2.nii.gz'})
+%     a =
+%       1×2 cell array
+%         {'/path/to'}    {'/path/to'}
+%     b =
+%       1×2 cell array
+%         {'fileprefix1'}    {'fileprefix2'}
+%     c =
+%         '.nii.gz'
+%     
+%     >> [a,b,c] = myfileparts(["/path/to/fileprefix1.nii.gz" "/path/to/fileprefix2.nii.gz"])
+%     a = 
+%       1×2 string array
+%         "/path/to"    "/path/to"
+%     b = 
+%       1×2 string array
+%         "fileprefix1"    "fileprefix2"
+%     c = 
+%         ".nii.gz"    
 
-SUFFIXES = {'.4dfp.img.rec' '.4dfp.img' '.4dfp.ifh' '.4dfp.hdr' '.img.rec' '.hdr.info' '.log' '.nii.gz' '.v.hdr' '.v.mhdr' '.v'};
+str_ = convertCharsToStrings(str);
 
-if (iscell(fstr))
-    if (length(fstr) > 1)
-        pth    = cell(1,length(fstr)); 
-        prefix = cell(1,length(fstr)); 
-        ext    = cell(1,length(fstr));
-        for f = 1:length(fstr)
-            [pth{f},prefix{f},ext{f}] = myfileparts(fstr{f});
+% multi-dotted SUFFIXES
+SUFFIXES = [ ...
+    ".4dfp.img.rec" ".4dfp.img" ".4dfp.ifh" ".4dfp.hdr" ...
+    ".img.rec" ".hdr.info" ".nii.gz" ".v.hdr" ".v.mhdr"];
+for s = 1:length(SUFFIXES)
+    if endsWith(str_, SUFFIXES(s))
+        [pth,fp,x] = fileparts(str_);
+        fp = extractBefore(fp + x, SUFFIXES(s));
+        x = SUFFIXES(s);
+        if ischar(str) || iscellstr(str) %#ok<*ISCLSTR> 
+            [pth,fp,x] = convertStringsToChars(pth, fp, x);
         end
         return
     end
-    fstr = fstr{1};
 end
 
-% base cases
-
-% recognized SUFFIXES
-for s = 1:length(SUFFIXES)
-    if (lstrfind(fstr, SUFFIXES{s}))
-        [pth,prefix,ext] = filepartsx(fstr, SUFFIXES{s});
-        return
+% preserve representations of trailing floating-point
+[pth,fp,x] = fileparts(str_);
+try
+    if ~isempty(str2num(x)) %#ok<ST2NM> 
+        fpx = [fp x];
+        fp = fpx;
+        x = '';
     end
+catch ME
+    handwarning(ME)
 end
-
-% trivial
-[pth,prefix,ext] = fileparts(fstr);
-
-% check for floating-point at end
-pe = [prefix ext];
-r = regexp(pe, '\d+\.\d+', 'match');
-if (~isempty(r)) % found f.p.
-    idx_f = strfind(pe, r{end}) + length(r{end}) - 1; % end idx of f.p.
-    if (idx_f > length(prefix)) % f.p. extends into ext
-        prefix = pe;
-        ext = '';
-    end
+if ischar(str) || iscellstr(str)
+    [pth,fp,x] = convertStringsToChars(pth, fp, x);
 end
 
 % Created with NEWFCN.m by Frank Gonzalez-Morphy (frank.gonzalez-morphy@mathworks.de) 

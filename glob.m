@@ -143,6 +143,7 @@
 function [LIST, ISDIR] = glob(FILESPEC, ignorecase)
 
 %% check FILESPEC input
+FILESPEC = convertStringsToChars(FILESPEC);
 if ischar(FILESPEC)
     if isempty(FILESPEC)
         % return when FILESPEC is empty

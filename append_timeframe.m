@@ -19,7 +19,7 @@ TRACERifc = mlfourd.ImagingFormatContext([TRACER '.nii.gz']);
 time61 = mlfourd.ImagingFormatContext(['a_itr-4_t-' timeIntervalStr 'sec_createDynamic2Carney_time61.nii.gz']);
 TRACERifc.img(:,:,:,62) = time61.img;
 TRACERifc.save;
-mlbash(sprintf('fslroi %s %s %s', 'FDG', 'fdg', mlnipet.ResourcesRegistry.instance.fslroiArgs))
+mlbash(sprintf('fslroi %s %s %s', 'FDG', 'fdg', mlnipet.NipetBuider.FSL_ROI_ARGS))
 traceric2 = mlfourd.ImagingContext2([tracer '.nii.gz']);
 traceric2 = traceric2.flip(1);
 traceric2.fileprefix = [traceric2.fileprefix 'r1'];

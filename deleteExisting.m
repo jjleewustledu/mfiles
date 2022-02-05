@@ -3,12 +3,15 @@ function deleteExisting(obj, varargin)
 %  It also supports cell arrays, mlfourd.INIfTI, mlfourd.HandleINIfTI.
 %  @param required obj to delete, e.g. obj_file.nii.gz.
 %  @param log is char extension of log files to also delete, e.g., delete obj_file.log and obj_file.nii.gz.
+%  @param metadata is char extension of metadata files to also delete, e.g., delete obj_file.json and obj_file.nii.gz.
 %
 %  Copyright 2019 John J. Lee.
 
     ip = inputParser;
-    addParameter(ip, 'log', '.log', @ischar)
-    parse(ip, varargin{:})    
+    addParameter(ip, 'log', '.log', @istext)
+    addParameter(ip, 'metadata', '.json', @istext)
+    parse(ip, varargin{:})  
+    ipr = ip.Results;
     if (isempty(obj))
         return
     end
@@ -36,8 +39,11 @@ function deleteExisting(obj, varargin)
             if isfile(g{1})
                 delete(g{1})
             end
-            if ~isempty(ip.Results.log)
-                deleteExisting(logfn(g{1}, ip.Results));
+            if ~isempty(ipr.log)
+                deleteExisting(logfn(g{1}, ipr));
+            end
+            if ~isempty(ipr.metadata)
+                deleteExisting(metadatafn(g{1}, ipr));
             end
         catch ME            
             handexcept(ME, 'mfiles:RuntimeError', 'deleteExisting(%s)', g{1})
@@ -49,6 +55,10 @@ function deleteExisting(obj, varargin)
     function fn_ = logfn(fn_, ipr)
         [p,f] = myfileparts(fn_);
         fn_ = fullfile(p, [f ipr.log]);
+    end
+    function fn_ = metadatafn(fn_, ipr)
+        [p,f] = myfileparts(fn_);
+        fn_ = fullfile(p, [f ipr.metadata]);
     end
 end
 

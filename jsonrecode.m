@@ -1,7 +1,7 @@
 function txt = jsonrecode(dataOri, dataNew, varargin)
 %% JSONRECODE adds additional information to existing json data objects.
 %  Args:
-%      dataOri (file|text): original json data in file, text or struct.
+%      dataOri (file|text|struct): original json data in file, text or struct.
 %      dataNew (file|text|struct) : new json data in file, text or struct.
 %      Name (text): params ConvertInfAndNan | PrettyPrint.  
 %                   See also web(fullfile(docroot, 'matlab/ref/jsonencode.html#namevaluepairarguments')).
@@ -28,8 +28,8 @@ end
 assert(isstruct(dataNew))
 
 data = mergeStruct(dataOri, dataNew);
-txt = jsonencode(data, varargin{:});
-txt = strrep(txt, "%", ""); % interferes with fprintf()
+txt = jsonencode(data, 'PrettyPrint', true, varargin{:});
+txt = strrep(txt, "%", "_"); % interferes with fprintf()
 
 
 % Created with NEWFCN.m by Frank Gonzalez-Morphy (frank.gonzalez-morphy@mathworks.de) 

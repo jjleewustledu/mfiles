@@ -16,6 +16,11 @@ function bn = mybasename(str)
 %
 %  Developed on Matlab 9.0.0.307022 (R2016a) Prerelease 
 
+if isfolder(str)
+    [~,bn1,bn2] = myfileparts(str);
+    bn = strcat(bn1, bn2);
+    return
+end
 [~,bn] = myfileparts(str);
 
 % Created with NEWFCN.m by Frank Gonzalez-Morphy (frank.gonzalez-morphy@mathworks.de) 

@@ -41,7 +41,7 @@ str_ = convertCharsToStrings(str);
 % multi-dotted SUFFIXES
 SUFFIXES = [ ...
     ".4dfp.img.rec" ".4dfp.img" ".4dfp.ifh" ".4dfp.hdr" ...
-    ".img.rec" ".hdr.info" ".nii.gz" ".v.hdr" ".v.mhdr"];
+    ".img.rec" ".hdr.info" ".nii.gz" ".v.hdr" ".v.mhdr" ".dcm.json"];
 for s = 1:length(SUFFIXES)
     if endsWith(str_, SUFFIXES(s))
         [pth,fp,x] = fileparts(str_);

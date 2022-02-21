@@ -1,4 +1,4 @@
-function those = construct_umaps(varargin)
+function umaps = construct_umaps(varargin)
     %% CONSTRUCT_UMAP supports niftypet.  It is the top level of a Matlab Compiler Runtime project.
     %  Usage:  construct_resolved([projectsExpr, sessionsExpr])
     %  e.g.:   >> construct_resolved('CCIR_00123', 'ses-E0012*')
@@ -23,7 +23,7 @@ function those = construct_umaps(varargin)
     ipr = adjustParameters(ip.Results);
     projExpr = ipr.projectsExpr;
     sessExpr = ipr.sessionsExpr;
-    those = {};
+    umaps = {};
     
     dtproj = DirTools(fullfile(mlraichle.StudyRegistry.instance.projectsDir, projExpr));
     for iproj = 1:length(dtproj.fqdns)
@@ -37,7 +37,7 @@ function those = construct_umaps(varargin)
                 fprintf([evalc('disp(sessd)') '\n']);
                 
                 warning('off', 'MATLAB:subsassigndimmismatch');
-                those{isess} = TracerDirector2.constructUmaps('sessionData', sessd);  %#ok<AGROW>
+                umaps{isess} = TracerDirector2.constructUmaps('sessionData', sessd);  %#ok<AGROW>
                 warning('on',  'MATLAB:subsassigndimmismatch');
             catch ME
                 dispwarning(ME)

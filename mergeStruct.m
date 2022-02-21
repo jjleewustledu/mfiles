@@ -10,7 +10,7 @@ function sout = mergeStruct(varargin)
 fn = [];
 for k = 1:nargin
     try
-        fn = [fn ; fieldnames(varargin{k})];
+        fn = [fn ; fieldnames(varargin{k})]; %#ok<AGROW> 
     catch MEstruct
         throw(MEstruct)
     end
@@ -27,7 +27,7 @@ end
 c = [];
 for k = 1:nargin
     try
-        c = [c ; struct2cell(varargin{k})];
+        c = [c ; struct2cell(varargin{k})]; %#ok<AGROW> 
     catch MEdata
         throw(MEdata);
     end

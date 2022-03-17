@@ -19,31 +19,37 @@ function deleteExisting(obj, varargin)
     %% recursions for objects
     
     if (iscell(obj))
-        cellfun(@(x) deleteExisting(x), obj, 'UniformOutput', false);
+        cellfun(@(x) deleteExisting(x, 'log', ipr.log, 'metadata', ipr.metadata), obj, 'UniformOutput', false);
         return
     end
     if (isa(obj, 'mlfourd.INIfTI') || isa(obj, 'mlfourd.HandleINIfTI') || ...
         isa(obj, 'mlio.IOInterface'))
-        deleteExisting(obj.fqfilename);
+        deleteExisting(obj.fqfilename, 'log', ipr.log, 'metadata', ipr.metadata);
         return
     end
     
     %% base case
     
-    assert(istext(obj));   
+    assert(istext(obj));
     for g = asrow(glob(obj))
         if isempty(g)
             return
         end
         try
+            lf = logfn(g{1}, ipr);
+            if ~isempty(ipr.log) && isfile(lf)
+                delete(lf);
+            end
+            mf = metadatafn(g{1}, ipr);
+            if ~isempty(ipr.metadata) && isfile(mf)
+                delete(mf);
+            end
+            if contains(g{1}, '.4dfp')                
+                delete(strcat(myfileprefix(g{1}), '.4dfp.*'));
+                return
+            end
             if isfile(g{1})
                 delete(g{1})
-            end
-            if ~isempty(ipr.log)
-                deleteExisting(logfn(g{1}, ipr));
-            end
-            if ~isempty(ipr.metadata)
-                deleteExisting(metadatafn(g{1}, ipr));
             end
         catch ME            
             handexcept(ME, 'mfiles:RuntimeError', 'deleteExisting(%s)', g{1})

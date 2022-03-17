@@ -21,6 +21,10 @@ if isfolder(str)
     bn = strcat(bn1, bn2);
     return
 end
+
+if endsWith(str, filesep)
+    str = extractBefore(str, strlength(str));
+end
 [~,bn] = myfileparts(str);
 
 % Created with NEWFCN.m by Frank Gonzalez-Morphy (frank.gonzalez-morphy@mathworks.de) 

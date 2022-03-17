@@ -1,7 +1,7 @@
 function umaps = construct_umaps(varargin)
     %% CONSTRUCT_UMAP supports niftypet.  It is the top level of a Matlab Compiler Runtime project.
-    %  Usage:  construct_resolved([projectsExpr, sessionsExpr])
-    %  e.g.:   >> construct_resolved('CCIR_00123', 'ses-E0012*')
+    %  Usage:  construct_umaps([projectsExpr, sessionsExpr])
+    %  e.g.:   >> construct_umaps('CCIR_00123', 'ses-E0012*')
     %  
     %  @precondition CT DICOM files in fullfile(projectsDir, project, session, 'ct', '') and
     %                subjectsDir := getenv('SUBJECTS_DIR')

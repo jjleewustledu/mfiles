@@ -1,6 +1,6 @@
 %% SAVEFIGURES saves all open figures as *.fig, *.pdf to the filesystem.
 %  Usage:  saveFigures([filesystem_location]['closeFigure', true (default) | false]) 
-%                       ^ pwd by default 
+%                       ^ option, pwd by default 
 %% Version $Revision$ was created $Date$ by $Author$,  
 %% last modified $LastChangedDate$ and checked into svn repository $URL$ 
 %% Developed on Matlab 8.5.0.197613 (R2015a) 
@@ -25,7 +25,7 @@ function saveFigures(varargin)
         figure(aFig);
         saveas(aFig, sprintf('%s%03d.fig', ipr.prefix, N-f+1));
         saveas(aFig, sprintf('%s%03d.png', ipr.prefix, N-f+1));
-        if (ip.Results.closeFigure); close(aFig); end
+        if (ipr.closeFigure); close(aFig); end
     end
     cd(pwd0);
 end

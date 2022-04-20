@@ -16,6 +16,16 @@ function bn = mybasename(str)
 %
 %  Developed on Matlab 9.0.0.307022 (R2016a) Prerelease 
 
+if iscell(str)
+    bn = cell(size(str));
+    for is = 1:length(str)
+        bn{is} = mybasename(str{is});
+    end
+    return
+end
+
+% base case
+
 if isfolder(str)
     [~,bn1,bn2] = myfileparts(str);
     bn = strcat(bn1, bn2);

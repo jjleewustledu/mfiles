@@ -41,7 +41,7 @@ str_ = convertCharsToStrings(str);
 % multi-dotted SUFFIXES
 SUFFIXES = [ ...
     ".4dfp.img.rec" ".4dfp.img" ".4dfp.ifh" ".4dfp.hdr" ".4dfp.*"...
-    ".img.rec" ".hdr.info" ".nii.gz" ".v.hdr" ".v.mhdr" ".v.*" ".dcm.json"];
+    ".img.rec" ".hdr.info" ".nii.gz" ".v.hdr" ".v.mhdr" ".v.*" ".dcm" ".dcm.json" ".bf" ".ptd" ".ptr"];
 for s = 1:length(SUFFIXES)
     if endsWith(str_, SUFFIXES(s))
         [pth,fp,x] = fileparts(str_);
@@ -54,11 +54,12 @@ for s = 1:length(SUFFIXES)
     end
 end
 
-% preserve representations of trailing floating-point
 [pth,fp,x] = fileparts(str_);
+x = convertCharsToStrings(x);
 try
+    % preserve representations of trailing floating-point
     if ~isempty(str2num(x)) %#ok<ST2NM> 
-        fpx = [fp x];
+        fpx = fp + x;
         fp = fpx;
         x = '';
     end

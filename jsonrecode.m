@@ -2,8 +2,8 @@ function txt = jsonrecode(dataOri, dataNew, varargin)
 %% JSONRECODE adds additional information to existing json data objects.
 %  Args:
 %      dataOri (required file|text|struct): original json data in file, text or struct.
-%      dataNew (required file|text|struct) : new json data in file, text or struct.
-%      PrettyPrint (logical): web(fullfile(docroot, 'matlab/ref/jsonencode.html#namevaluepairarguments')).
+%      dataNew (required file|text|struct): new json data in file, text or struct.
+%      PrettyPrint (logical): default is true.  See also web(fullfile(docroot, 'matlab/ref/jsonencode.html#namevaluepairarguments')).
 %      filenameNew (text): new json filename to write.  By default writes nothing. 
 %      noclobber (logical): default is false.
 %  Returns:

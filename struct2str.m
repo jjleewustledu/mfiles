@@ -18,9 +18,9 @@ function str = struct2str(aStruct, varargin)
     parse(ip, aStruct, varargin{:});
 
     if (ip.Results.Punctuation)
-        colon = ' = '; semic = ', ';
+        colon = ': '; comma = ', ';
     else    
-        colon = ' ';  semic = ' ';
+        colon = ' ';  comma = ' ';
     end
 
     str  = '';
@@ -66,7 +66,7 @@ function str = struct2str(aStruct, varargin)
     str = str(1:end-2);
 
     function str_ = appendEntry(str_, fld_, fldval_)
-        str_ = [str_ fld_ colon strtrim(fldval_) semic]; %#ok<*AGROW>
+        str_ = [str_ fld_ colon strtrim(fldval_) comma]; %#ok<*AGROW>
     end
 end
 

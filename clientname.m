@@ -2,7 +2,7 @@ function nm = clientname(varargin)
 %% CLIENTNAME is intended for use in logging, generating filenames.
 %  Args:
 %      use_underscores (logical, option): replace {"." "(" ")" "[" "]" "{" "}"} with "_"; default is false.
-%      stack_index (scalar, option): index for dbstack.  
+%      stack_index (scalar, option): any valid index for dbstack.  
 %                                    3 ~ client of func calling clientname(), the default.  
 %                                    2 ~ func calling clientname(). 
 %                                    1 ~ clientname(). 

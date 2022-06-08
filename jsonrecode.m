@@ -1,8 +1,8 @@
 function txt = jsonrecode(dataOri, dataNew, varargin)
 %% JSONRECODE adds additional information to existing json data objects.
 %  Args:
-%      dataOri (required file|text|struct): original json data in file, text or struct.
-%      dataNew (required file|text|struct): new json data in file, text or struct.
+%      dataOri (required []|file|text|struct): original json data in file, text or struct.
+%      dataNew (required []|file|text|struct): new json data in file, text or struct.
 %      PrettyPrint (logical): default is true.  See also web(fullfile(docroot, 'matlab/ref/jsonencode.html#namevaluepairarguments')).
 %      filenameNew (text): new json filename to write.  By default writes nothing. 
 %      noclobber (logical): default is false.
@@ -14,29 +14,40 @@ function txt = jsonrecode(dataOri, dataNew, varargin)
 %  Developed on Matlab 9.11.0.1809720 (R2021b) Update 1 for MACI64.  Copyright 2022 John J. Lee.
 
 ip = inputParser;
-addRequired(ip, 'dataOri', @(x) isstruct(x) || isfile(x) || istext(x))
-addRequired(ip, 'dataNew', @(x) isstruct(x) || isfile(x) || istext(x))
+addRequired(ip, 'dataOri', @(x) isempty(x) || isstruct(x) || isfile(x) || istext(x))
+addRequired(ip, 'dataNew', @(x) isempty(x) || isstruct(x) || isfile(x) || istext(x))
 addParameter(ip, 'PrettyPrint', true, @islogical)
 addParameter(ip, 'filenameNew', '', @istext)
 addParameter(ip, 'noclobber', false, @islogical)
 parse(ip, dataOri, dataNew, varargin{:});
 ipr = ip.Results;
 
-if istext(dataOri)
-    if isfile(dataOri) && endsWith(dataOri, '.json', 'IgnoreCase', true)
-        dataOri = fileread(dataOri);
+try
+    if istext(dataOri)
+        if isfile(dataOri) && endsWith(dataOri, '.json', 'IgnoreCase', true)
+            dataOri = fileread(dataOri);
+        end
+        dataOri = jsondecode(dataOri);
     end
-    dataOri = jsondecode(dataOri);
+    assert(isstruct(dataOri))
+catch
+    dataOri = struct( ...
+        'Name', 'Unknown', ...
+        'BIDSVersion', '1.7.0', ...
+        'GeneratedBy', clientname(true, 2));
 end
-assert(isstruct(dataOri))
 
-if istext(dataNew) 
-    if isfile(dataNew) && endsWith(dataNew, '.json', 'IgnoreCase', true)
-        dataNew = fileread(dataNew);
+try
+    if istext(dataNew) 
+        if isfile(dataNew) && endsWith(dataNew, '.json', 'IgnoreCase', true)
+            dataNew = fileread(dataNew);
+        end
+        dataNew = jsondecode(dataNew);
     end
-    dataNew = jsondecode(dataNew);
+    assert(isstruct(dataNew))
+catch
+    dataNew = struct('Unknown', 'unknown');
 end
-assert(isstruct(dataNew))
 
 % manage duplicates
 duplicates = intersect(fields(dataOri), fields(dataNew));

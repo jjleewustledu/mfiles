@@ -14,6 +14,11 @@ function fqfp = myfileprefix(str)
 %
 %  Developed on Matlab 9.0.0.307022 (R2016a) Prerelease 
 
+if isempty(str) || "" == str
+    fqfp = str;
+    return
+end
+
 [pth,fp] = myfileparts(str);
 fqfp = fullfile(pth, fp);
 

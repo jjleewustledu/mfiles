@@ -37,6 +37,15 @@ function [pth,fp,x] = myfileparts(str)
 %         ".nii.gz"    
 
 str_ = convertCharsToStrings(str);
+if "" == str_
+    pth = "";
+    fp = "";
+    x = "";
+    if ischar(str) || iscellstr(str)
+        [pth,fp,x] = convertStringsToChars(pth, fp, x);
+    end
+    return
+end
 
 % multi-dotted SUFFIXES
 SUFFIXES = [ ...

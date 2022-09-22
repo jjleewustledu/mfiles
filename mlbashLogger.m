@@ -9,10 +9,11 @@ function [s,r] = mlbashLogger(cmdline, logger)
     addRequired( ip, 'logger', @(x) isa(x, 'mlpipeline.ILogger'));
     parse(ip, cmdline, logger);
 
-    [s,r] = system(cmdline);
     logger.add(sprintf('mlbashLogger.cmdline:  %s\n', cmdline));
+    [s,r] = system(cmdline);
     logger.add(sprintf('mlbashLogger.s:  %i\n', s));
     logger.add(sprintf('mlbashLogger.r:\n%s\n', r));
+    
     if (s ~= 0)
         error('mfiles:ChildProcessError', 'mlbashLogger:\n%s\nreturned s->%i\n%s', cmdline, s, r);
     end

@@ -8,13 +8,11 @@ function h = hostname()
     try
         [s,h] = system('hostname -f'); h = strtrim(h);
         if (s ~= 0)
-            [s,h] = system('hostid'); h = strtrim(h);
-        end
-        if (s ~= 0)
-            error('mfiles:RuntimeError', 'hostname could not call system():\n%s', h);
+            [s,h] = system('hostname'); h = strtrim(h);
         end
     catch ME
-        dispexcept(ME);
+        handwarning(ME);
+        h = 'unknown_host';
     end
 end
 

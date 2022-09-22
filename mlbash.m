@@ -46,10 +46,6 @@ function [s,r] = mlbash(cmdline, varargin)
         disp(ME);
         disp(struct2str(ME.stack));
     end
-    %if s ~= 0
-    %    throw(MException('mfiles:ChildProcessError', ...
-    %        'mlbash:\n%s\nreturned status -> %i\n         result -> %s', cmdline, s, r));
-    %end
 end
 
 % Created with NEWFCN.m by Frank Gonzalez-Morphy (frank.gonzalez-morphy@mathworks.de) 

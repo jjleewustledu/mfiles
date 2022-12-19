@@ -1,3 +1,3 @@
-function [s,r] = mlbash(varargin)
+function [s,r] = mlcmd(varargin)
     [s,r] = mysystem(varargin{:});
 end

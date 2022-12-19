@@ -1,5 +1,5 @@
 function tf = istext(arg)
-%% ISTEXT assesses whether a text object is string, cellstr or char.
+%% ISTEXT assesses whether an object is string, cellstr or char.
 %  Args:
 %      arg (string|cellstr|char):  text object to assess.
 %  Returns:

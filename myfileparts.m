@@ -1,8 +1,9 @@
-function [pth,fp,x] = myfileparts(str)
+function [pth,fp,x] = myfileparts(str, n)
 %% MYFILEPARTS extends fileparts to recognize multi-dotted SUFFIXES as file extensions.
 %  It also preserves trailing floating point numbers such as "/path/to/file_tagged_1.23".
 %  Args:
 %      str (text): may be a fully-qualified filename.
+%      n (integer): number of recursive calls to myfileparts, useful for removing trailing filesep or folders
 %  Returns:
 %      pth: is the path matching the type of str.
 %      fp: is the file prefix matching the type of str.
@@ -36,6 +37,15 @@ function [pth,fp,x] = myfileparts(str)
 %     c = 
 %         ".nii.gz"    
 
+arguments
+    str {mustBeText}
+    n {mustBeInteger} = 1
+end
+if n > 1
+    [pth,fp,x] = myfileparts(myfileparts(str), n-1);
+    return
+end
+
 str_ = convertCharsToStrings(str);
 if "" == str_
     pth = "";
@@ -50,7 +60,9 @@ end
 % multi-dotted SUFFIXES
 SUFFIXES = [ ...
     ".4dfp.img.rec" ".4dfp.img" ".4dfp.ifh" ".4dfp.hdr" ".4dfp.*"...
-    ".img.rec" ".hdr.info" ".nii.gz" ".v.hdr" ".v.mhdr" ".v.*" ".dcm" ".dcm.json" ".bf" ".ptd" ".ptr"];
+    ".img.rec" ".hdr.info" ...
+    ".nii.gz" ".dlabel.nii" ".dscalar.nii" ".dtseries.nii" ".func.gii" ".label.gii" ".shape.gii" ".surf.gii" ...
+    ".v.hdr" ".v.mhdr" ".v.*" ".dcm" ".dcm.json" ".bf" ".ptd" ".ptr"];
 for s = 1:length(SUFFIXES)
     if endsWith(str_, SUFFIXES(s))
         [pth,fp,x] = fileparts(str_);

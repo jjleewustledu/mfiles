@@ -6,7 +6,7 @@ function fn_nii = fourdfp2nifti(fn_4dfp, opts)
 %      opts.verbose logical = false
 %      opts.writejson logical = true
 %  Returns:
-%      filename of NIfTI
+%      filename of NIfTI in same folder as 4dfp
 %
 %  Created 29-Nov-2022 17:53:46 by jjlee in repository
 %  /Users/jjlee/MATLAB-Drive/mfiles.
@@ -30,9 +30,6 @@ ic = mlfourd.ImagingContext2(fn_4dfp);
 nii = ic.nifti;
 fn_nii = nii.fqfn;
 fn_json = strcat(nii.fqfp, '.json');
-if ~isfile(fn_nii) || ~opts.noclobber
-    save(nii, savelog=false)
-end
 
 if opts.verbose
     %% be verbose
@@ -60,13 +57,21 @@ if opts.verbose
     end
 end
 
+if ~isfile(fn_nii) || ~opts.noclobber
+    %% save NIfTI
+    save(nii, savelog=false)
+    fprintf('fourdfp2nifti: wrote %s\n', fn_nii)
+end
+
 if opts.writejson && (~isfile(fn_json) || ~opts.noclobber)
     %% write json
     try
-        r = fileread(strcat(nii.fqfp, '.4dfp.img.rec'));
-        if ~isfile(r)
-            s = struct('rec', 'de novo');
+
+        imgrec = strcat(nii.fqfp, '.4dfp.img.rec');
+        if ~isfile(imgrec)
+            s = struct('rec', 'de novo from fourdfp2nifti');
         else
+            r = fileread(imgrec);
             s = struct('rec', sprintf(r));
             if opts.verbose
                 fprintf('fourdfp2nii: found .img.rec with contents:\n')
@@ -77,6 +82,7 @@ if opts.writejson && (~isfile(fn_json) || ~opts.noclobber)
         fid = fopen(fn_json, 'w');
         fprintf(fid, j);
         fclose(fid);
+        fprintf('fourdfp2nifti: wrote %s\n', fn_json)
     catch ME
         handwarning(ME)
     end

@@ -1,9 +1,37 @@
 function str = struct2str(aStruct, varargin)
     %% STRUCT2STR
     %  Usage:  string = struct2str(aStruct[, param, value]) 
-    %                                        ^ 'Punctuation', true by default    
-    %  Test:  struct2str(struct('single_field', struct('fieldone',1,'fieldtwo',[2 3; 4 5], 'fieldthree', struct('fieldfour', 'lastitem'))))
-    %  ans:   single_field: fieldone: 1; fieldtwo: [2 3;4 5]; fieldthree: fieldfour: lastitem;;;
+    %                                        ^ 'Punctuation', default true
+    %                                        ^ 'Assignment', default ': '
+    %                                        ^ 'Separator', default ', '
+    %                                        ^ 'JsonEncode', default false
+    %                                        ^ 'ConvertInfAndNan', default true
+    %                                        ^ 'PrettyPrint', default false
+    %  test:  struct2str(struct('single_field', struct('fieldone',1,'fieldtwo',[2 3; 4 5], 'fieldthree', struct("fieldfour", "lastitem"))))
+    %  ans:   'single_field:fieldone:1,fieldtwo:[2 3;4 5],fieldthree:fieldfour:lastitem,,,'
+    %  test:  struct2str(struct('single_field', struct('fieldone',1,'fieldtwo',[2 3; 4 5], 'fieldthree', struct("fieldfour", "lastitem"))), Punctuation=false)
+    %  ans:   'single_field fieldone 1 fieldtwo [2 3;4 5] fieldthree fieldfour lastitem '
+    %  test:  struct2str(struct('single_field', struct('fieldone',1,'fieldtwo',[2 3; 4 5], 'fieldthree', struct("fieldfour", "lastitem"))), JsonEncode=true)
+    %  ans:   '{"single_field":{"fieldone":1,"fieldtwo":[[2,3],[4,5]],"fieldthree":{"fieldfour":"lastitem"}}}'
+    %  test:  struct2str(struct('single_field', struct('fieldone',1,'fieldtwo',[2 3; 4 5], 'fieldthree', struct("fieldfour", "lastitem"))), JsonEncode=true, PrettyPrint=true)
+    %  ans:   '{
+    %            "single_field": {
+    %              "fieldone": 1,
+    %              "fieldtwo": [
+    %                [
+    %                  2,
+    %                  3
+    %                ],
+    %                [
+    %                  4,
+    %                  5
+    %                ]
+    %              ],
+    %              "fieldthree": {
+    %                "fieldfour": "lastitem"
+    %              }
+    %            }
+    %          }'
     %  See also:  cell2str, list2str, func2str, num2str, ensureString
 
     %% Version $Revision: 1225 $ was created $Date: 2012-08-23 16:04:28 -0500 (Thu, 23 Aug 2012) $ by $Author: jjlee $,  
@@ -13,14 +41,22 @@ function str = struct2str(aStruct, varargin)
 
     ip = inputParser;
     ip.KeepUnmatched = true;
-    addRequired( ip, 'aStruct',           @isstruct);
+    addRequired( ip, 'aStruct', @isstruct);
     addParameter(ip, 'Punctuation', true, @islogical);
+    addParameter(ip, 'Assignment', ': ', @istext);
+    addParameter(ip, 'Separator', ', ', @istext);
+    addParameter(ip, 'JsonEncode', false, @islogical);
+    addParameter(ip, 'ConvertInfAndNaN', true, @islogical);
+    addParameter(ip, 'PrettyPrint', false, @islogical);
     parse(ip, aStruct, varargin{:});
-
-    if (ip.Results.Punctuation)
-        colon = ': '; comma = ', ';
-    else    
-        colon = ' ';  comma = ' ';
+    ipr = ip.Results;
+    if ~ipr.Punctuation   
+        ipr.Assignment = ' ';
+        ipr.Separator = ' ';
+    end
+    if ipr.JsonEncode
+        str = jsonencode(aStruct, ConvertInfAndNaN=ipr.ConvertInfAndNaN, PrettyPrint=ipr.PrettyPrint);
+        return
     end
 
     str  = '';
@@ -61,12 +97,14 @@ function str = struct2str(aStruct, varargin)
                     end
             end
         end
-        str = sprintf('%s\n', str(1:end-1));
     end
-    str = str(1:end-2);
 
     function str_ = appendEntry(str_, fld_, fldval_)
-        str_ = [str_ fld_ colon strtrim(fldval_) comma]; %#ok<*AGROW>
+        try
+            str_ = [str_ fld_ ipr.Assignment strtrim(fldval_) ipr.Separator]; %#ok<*AGROW>
+        catch
+            str_ = append(str_, fld_, ipr.Assignment, strtrim(fldval_), ipr.Separator); %#ok<*AGROW>
+        end
     end
 end
 

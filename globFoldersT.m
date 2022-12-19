@@ -1,20 +1,18 @@
-function arow = globFoldersT(varargin)
+function [list,isdir] = globFoldersT(varargin)
 %% GLOBFOLDERST
-%  @returns cell row-array of folders, not files, without trailing filesep.
-%  Usage:  <folders> = globFoldersT(<args to glob()>)
+%  Usage:  [list,isdir] = globFoldersT(<args to glob()>)
+%  Args:  passed to globFolder() -> glob().
+%  Returns:
+%      list cell:  row of globbed folders stripped of trailing filesep.
+%      isdir logical:  row of all trues for folders, matching interface of glob().
 %
 %% Version $Revision$ was created $Date$ by $Author$,  
 %% last modified $LastChangedDate$ and checked into repository $URL$,  
 %% developed on Matlab 9.7.0.1216025 (R2019b) Update 1.  Copyright 2019 John Joowon Lee. 
 
-arow = globT(varargin{:});
-try
-    arefolders = cell2mat(cellfun(@(x) isfolder(x), arow, 'UniformOutput', false));
-catch ME
-    handwarning(ME)
-    arefolders = cell2mat(cellfun(@(x) lexist(x), arow, 'UniformOutput', false));    
-end
-arow = arow(arefolders);
+[list,isdir] = globFolders(varargin{:});
+list = list';
+isdir = isdir';
 
 % Created with NEWFCN.m by Frank Gonzalez-Morphy (frank.gonzalez-morphy@mathworks.de) 
 % ===== EOF ====== [/Users/jjlee/MATLAB-Drive/mfiles/globFoldersT.m] ======  

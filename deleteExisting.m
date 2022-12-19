@@ -49,7 +49,7 @@ function deleteExisting(obj, varargin)
                 return
             end
             if isfile(g{1})
-                delete(g{1})
+                delete(g{1});
             end
         catch ME            
             handexcept(ME, 'mfiles:RuntimeError', 'deleteExisting(%s)', g{1})

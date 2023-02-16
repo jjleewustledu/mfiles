@@ -48,6 +48,7 @@ function str = struct2str(aStruct, varargin)
     addParameter(ip, 'JsonEncode', false, @islogical);
     addParameter(ip, 'ConvertInfAndNaN', true, @islogical);
     addParameter(ip, 'PrettyPrint', false, @islogical);
+    addParameter(ip, 'orientation', 'vert', @istext); % 'vert' | 'horz'
     parse(ip, aStruct, varargin{:});
     ipr = ip.Results;
     if ~ipr.Punctuation   
@@ -59,7 +60,7 @@ function str = struct2str(aStruct, varargin)
         return
     end
 
-    str  = '';
+    str  = "";
     flds = fields(aStruct);
     for s = 1:length(aStruct)
         for f = 1:length(flds) %#ok<*FORFLG,*PFUNK>
@@ -101,9 +102,13 @@ function str = struct2str(aStruct, varargin)
 
     function str_ = appendEntry(str_, fld_, fldval_)
         try
-            str_ = [str_ fld_ ipr.Assignment strtrim(fldval_) ipr.Separator]; %#ok<*AGROW>
-        catch
-            str_ = append(str_, fld_, ipr.Assignment, strtrim(fldval_), ipr.Separator); %#ok<*AGROW>
+            if contains(ipr.orientation, 'vert')
+                str_ = vertcat(str_, append(fld_, ipr.Assignment, strtrim(fldval_), ipr.Separator)); %#ok<*AGROW>
+            else
+                str_ = horzcat(str_, append(fld_, ipr.Assignment, strtrim(fldval_), ipr.Separator)); %#ok<*AGROW>
+            end
+        catch ME
+            handexcept(ME)
         end
     end
 end

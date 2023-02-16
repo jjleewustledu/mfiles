@@ -29,9 +29,9 @@ for sub = subjects
                 continue
             end            
             radm = mlpet.CCIRRadMeasurements.createFromSession(sesd);
-            lab.hct = str2double(radm.fromPamStone{'Hct', 1}{1});
-            rows = contains(radm.fromPamStone.Properties.RowNames, 'glc FDG');
-            glc = cellfun(@str2double, radm.fromPamStone{rows, 1});
+            lab.hct = str2double(radm.laboratory{'Hct', 1}{1});
+            rows = contains(radm.laboratory.Properties.RowNames, 'glc FDG');
+            glc = cellfun(@str2double, radm.laboratory{rows, 1});
             lab.glc = mean(glc(~isnan(glc)));
             matfn = [myfileprefix(sesd.fdgOnAtlas()) '_b43.mat'];
             matfn = strrep(matfn, 'fdgdt', 'labdt');

@@ -15,6 +15,8 @@ function deleteExisting(obj, varargin)
     if (isempty(obj))
         return
     end
+    obj = convertStringsToChars(obj);
+    obj = convertStringsToChars(obj);
     
     %% recursions for objects
     

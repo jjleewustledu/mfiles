@@ -14,7 +14,7 @@ function fqfp = myfileprefix(str)
 %
 %  Developed on Matlab 9.0.0.307022 (R2016a) Prerelease 
 
-if isempty(str) || "" == str
+if all(isemptytext(str))
     fqfp = str;
     return
 end

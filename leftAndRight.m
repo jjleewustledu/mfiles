@@ -29,11 +29,11 @@ assert(isa(Rmsk, 'mlfourd.INIfTI')); assert(~isa(Rmsk, 'mlfourd.NIfTI_mask'));
 if (exist('debug', 'var'))
     switch (uint8(debug))
         case 1
-            mlbash(['slices ' nii.fileprefix]);
+            mlbash(strcat('slices ', nii.fileprefix));
         case {2,3}
-            mlbash(['slices ' nii.fileprefix]);
-            mlbash(['slices ' Lmsk.fileprefix]);
-            mlbash(['slices ' Rmsk.fileprefix]);
+            mlbash(strcat('slices ', nii.fileprefix));
+            mlbash(strcat('slices ', Lmsk.fileprefix));
+            mlbash(strcat('slices ', Rmsk.fileprefix));
         otherwise
     end
 end

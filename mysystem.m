@@ -10,11 +10,11 @@ function [s,r] = mysystem(toeval, varargin)
     %  Developed on Matlab 9.13.0.2105380 (R2022b) Update 2 for MACI64.  Copyright 2022 John J. Lee.
 
     try
-        s = 0; r = ''; %#ok<*NASGU>     
+        s = 0; r = ''; %#ok<*NASGU>
         switch computer
             case 'GLNXA64'
                 [s,r] = mybash(toeval, varargin{:});
-            case 'MACI64'
+            case {'MACI64', 'MACA64'}
                 [s,r] = myzsh(toeval, varargin{:});
             case 'PCWIN64'
                 [s,r] = mycmd(toeval, varargin{:});
@@ -27,6 +27,10 @@ function [s,r] = mysystem(toeval, varargin)
         end
     catch ME
         handwarning(ME);
+        if (s ~= 0)
+            str.toeval = toeval; str.s = s; str.r = r;
+            warning('mfiles:ChildProcessWarning', jsonencode(str, PrettyPrint=true));
+        end
     end
                 
     %% INTERNAL

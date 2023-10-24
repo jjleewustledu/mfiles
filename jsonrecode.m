@@ -32,7 +32,7 @@ function txt = jsonrecode(dataOri, dataNew, varargin)
             dataOri = fqfn2txt__(dataOri.fqfn);
         end
         if istext(dataOri)
-            if ~contains(dataOri, "{") || ~contains(dataOri, "}")
+            if ~any(contains(dataOri, "{")) && ~any(contains(dataOri, "}"))
                 dataOri = fqfn2txt__(dataOri);
             end
             dataOri = jsondecode(dataOri);
@@ -51,7 +51,7 @@ function txt = jsonrecode(dataOri, dataNew, varargin)
             dataNew = fqfn2txt__(dataNew.fqfn);
         end
         if istext(dataNew) 
-            if ~contains(dataNew, "{") || ~contains(dataNew, "}")
+            if ~any(contains(dataNew, "{")) && ~any(contains(dataNew, "}"))
                 dataNew = fqfn2txt__(dataNew);
             end
             dataNew = jsondecode(dataNew);

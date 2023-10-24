@@ -10,7 +10,7 @@ function pwd1 = popd(pwd0)
 
 pwd1 = pwd;
 assert(isfolder(pwd0));
-cd(pwd0)
+cd(pwd0);
 
 % Created with NEWFCN.m by Frank Gonzalez-Morphy (frank.gonzalez-morphy@mathworks.de) 
 % ===== EOF ====== [/Users/jjlee/Local/src/mlcvl/mfiles/popd.m] ======  

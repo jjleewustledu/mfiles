@@ -40,11 +40,9 @@ switch typ
     case {'fqfileprefix' 'fqfp' 'fdfp' '4dfp'}
         im = obj.fqfileprefix;                  
     case {'ImagingContext2' 'mlfourd.ImagingContext2'}
-        im = mlfourd.ImagingContext2(obj);
+        im = obj;
     case {'ImagingFormatContext2' 'mlfourd.ImagingFormatContext2'}
-        im = mlfourd.ImagingFormatContext2(obj);
-    case {'ImagingFormatContext' 'mlfourd.ImagingFormatContext'}
-        im = mlfourd.ImagingFormatContext(obj);
+        im = obj.imagingFormat;
     case {'mgz' '.mgz'}
         im = [obj.fqfileprefix '.mgz'];
     case {'mhdr' '.mhdr'}

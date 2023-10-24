@@ -25,7 +25,7 @@ if strlength(fullfile(varargin{:})) > 0 && ~isfolder(fullfile(varargin{:}))
         mkdir(varargin1{:});
     catch ME
         handwarning(ME);
-        mlbash(sprintf('mkdir -pv %s', strrep(str, ' ', '/')));
+        mlbash(sprintf('mkdir -pv %s', strrep(str, ' ', filesep)));
     end
 end
 theDir = fullfile(varargin{:});

@@ -14,7 +14,7 @@ if ~istext(arg)
     return
 end
 
-tf = all(arg == "" | isempty(arg));
+tf = all(arg == "") || isempty(arg);
 
 % Created with NEWFCN.m by Frank Gonzalez-Morphy (frank.gonzalez-morphy@mathworks.de) 
 % ===== EOF ====== [/Users/jjlee/MATLAB-Drive/mfiles/isemptytext.m] ======  

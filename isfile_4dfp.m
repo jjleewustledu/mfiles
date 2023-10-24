@@ -15,7 +15,7 @@ assert(istext(name))
 name = myfileprefix(name);
 name = convertCharsToStrings(name);
 if ~isfile(name + ".4dfp.img.rec")
-    warning("mfiles:FileNotFoundError", "isfile_4dfp could not find " + name + ".4dfp.img.rec")
+    fprintf("isfile_4dfp could not find " + name + ".4dfp.img.rec")
 end
 tf = isfile(name + ".4dfp.hdr") & isfile(name + ".4dfp.ifh") & isfile(name + ".4dfp.img");
 

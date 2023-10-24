@@ -6,6 +6,7 @@ function rname = stackstr(stack_index, opts)
 %                                                 2 ~ func calling stackstr(). 
 %                                                 1 ~ stackstr(). 
 %      opts.use_underscores logical = true : replace {"." "(" ")" "[" "]" "{" "}"} with "_".
+%      opts.use_dashes logical = true : replace {"." "(" ")" "[" "]" "{" "}" "_"} with "-".
 %  Returns:
 %      rname : returned name, e.g., mlpackage_ClientClassName, generated from dbstack()
 %
@@ -16,6 +17,7 @@ function rname = stackstr(stack_index, opts)
 arguments
     stack_index double {mustBeScalarOrEmpty} = 2
     opts.use_underscores logical = true
+    opts.use_dashes logical = false
 end
 
 dbs = dbstack;
@@ -29,6 +31,17 @@ if opts.use_underscores
     rname = strrep(rname, '{', '_');
     rname = strrep(rname, '}', '_');
     rname = strrep(rname, '%', '_');
+end
+if opts.use_dashes
+    rname = strrep(rname, '.', '-');
+    rname = strrep(rname, '(', '-');
+    rname = strrep(rname, ')', '-');
+    rname = strrep(rname, '[', '-');
+    rname = strrep(rname, ']', '-');
+    rname = strrep(rname, '{', '-');
+    rname = strrep(rname, '}', '-');
+    rname = strrep(rname, '%', '-');
+    rname = strrep(rname, '_', '-');
 end
 
 % Created with NEWFCN.m by Frank Gonzalez-Morphy (frank.gonzalez-morphy@mathworks.de) 

@@ -10,6 +10,7 @@ function [list,isdir] = globFolders(varargin)
 %% last modified $LastChangedDate$ and checked into repository $URL$,  
 %% developed on Matlab 9.7.0.1216025 (R2019b) Update 1.  Copyright 2019 John Joowon Lee. 
 
+
 [list,isdir] = glob(varargin{:});
 list = list(isdir);
 list = strip(list, 'right', filesep);

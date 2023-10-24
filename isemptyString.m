@@ -1,4 +1,4 @@
-function tf = isemptyString(s)
+function tf = isemptyString(varargin)
 %% ISEMPTYSTRING throws an exception if typeclass is unexpected
 %   
 %  Usage:  boolean = isemptyString(char_string) 
@@ -8,9 +8,7 @@ function tf = isemptyString(s)
 %% Developed on Matlab 8.1.0.604 (R2013a) 
 %% $Id$ 
 
-if (~ischar(s))
-    error('mfiles:unexpectedTypeclass', 'isemptyString.s->%s', class(s)); end
-tf = isempty(s);
+tf = isemptytext(varargin{:});
 
 
 

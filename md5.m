@@ -10,7 +10,7 @@ function digest = md5(fn)
 
 DIGEST_EXP = 'MD5 (\S+) = (?<digest>\w+)';
 
-[s,r] = mlbash(['md5 ' fn]);
+[s,r] = mlbash(sprintf('md5 %s', fn));
 assert(0 == s);
 names = regexp(r, DIGEST_EXP, 'names');
 digest = names.digest;

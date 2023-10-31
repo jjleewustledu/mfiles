@@ -1,7 +1,7 @@
 function [s__,r__] = reconall_chpc()
 
     import mlperfusion.*;
-    if (strcmp(computer, 'MACI64'))
+    if contains(computer, 'MACI64')
         subjectsDir = '/Volumes/SeagateBP5/powers/np497/jjlee'; 
         diary(fullfile(subjectsDir, sprintf('%s_diary_%s.log', mfilename, datestr(now, 30)))); 
     else
@@ -35,7 +35,7 @@ function [s__,r__] = reconall_chpc()
     
     cd(subjectsDir);
     save(fullfile(subjectsDir, sprintf('%s_%s.mat', mfilename, datestr(now, 30))), '-v7.3');    
-    if (strcmp(computer, 'MACI64'))
+    if contains(computer, 'MAC')
         diary off; 
     end
     

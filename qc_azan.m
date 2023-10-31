@@ -1,7 +1,7 @@
-function qc_azan(crvfile, pmod_factor, hct, opts)
+function crv_deconv = qc_azan(crvfile, pmod_factor, hct, opts)
 %  crvfile {mustBeFile}: e.g., 'R01AA_103_v2_D1.crv'
 %  pmod_factor {mustBeScalarOrEmpty} : ~ 40:80
-%  hct {mustBeScalarOrEmpty}
+%  hct {mustBeScalarOrEmpty} % males -> 45.5, females -> 42, unknown sex -> 43.75
 %  opts.t0 {mustBeScalarOrEmpty} = 14.9
 %  opts.idx0 double : 2760
 %  opts.idxf double : 3155
@@ -10,8 +10,8 @@ function qc_azan(crvfile, pmod_factor, hct, opts)
 
 arguments
     crvfile {mustBeFile}
-    pmod_factor {mustBeScalarOrEmpty}
-    hct {mustBeScalarOrEmpty}
+    pmod_factor {mustBeScalarOrEmpty} 
+    hct {mustBeScalarOrEmpty} = 43.75
     opts.t0 {mustBeScalarOrEmpty} = 14.9
     opts.idx0 double = []
     opts.idxf double = []
@@ -20,7 +20,7 @@ arguments
 end
 if hct < 1; hct = 100*hct; end
 opts.tracer = lower(opts.tracer);
-inveff = (1/0.27)*pmod_factor;
+inveff = (1/0.27)*pmod_factor; % per visible volume of cath
 
 %% flatten baseline drift from tracer deposition in catheters
 % crvc = mlswisstrace.CrvData('R01AA_105_v2_callibrated_D1.crv')
@@ -48,6 +48,7 @@ cath = mlswisstrace.Catheter_DT20190930( ...
     'tracer', opts.isotope); % t0 reflects rigid extension + Luer valve + cath in Twilite cradle
 M = zeros(size(crv.timetable().Coincidence));
 M(opts.idx0:opts.idxf) = cath.deconvBayes();
+cath.plotall();
 crv_deconv = copy(crv);
 crv_deconv.filename = strcat(fileprefix, '.crv');
 crv_deconv.coincidence = M/inveff;
@@ -58,6 +59,3 @@ set(gca, 'FontSize', 14)
 savefig(gcf, strcat(fileprefix, '.fig'), 'compact')
 exportgraphics(gcf, strcat(fileprefix, '.png'), 'Resolution', 600)
 
-figure
-plotAll(crv_deconv)
-disp(crv_deconv)

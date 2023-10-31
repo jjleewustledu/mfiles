@@ -8,7 +8,7 @@ function [s,r] = chpc_check()
 %% $Id$ 
 
 targ = mlraichle.StudyRegistry.instance.subjectsDir;
-[s,r] = mlbash(['du -h ' targ]);
+[s,r] = mlbash(strcat('du -h ', targ));
 
 
 

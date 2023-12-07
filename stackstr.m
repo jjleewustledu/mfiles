@@ -18,6 +18,7 @@ arguments
     stack_index double {mustBeScalarOrEmpty} = 2
     opts.use_underscores logical = true
     opts.use_dashes logical = false
+    opts.use_spaces logical = false
 end
 
 dbs = dbstack;
@@ -42,6 +43,17 @@ if opts.use_dashes
     rname = strrep(rname, '}', '-');
     rname = strrep(rname, '%', '-');
     rname = strrep(rname, '_', '-');
+end
+if opts.use_dashes
+    rname = strrep(rname, '.', ' ');
+    rname = strrep(rname, '(', ' ');
+    rname = strrep(rname, ')', ' ');
+    rname = strrep(rname, '[', ' ');
+    rname = strrep(rname, ']', ' ');
+    rname = strrep(rname, '{', ' ');
+    rname = strrep(rname, '}', ' ');
+    rname = strrep(rname, '%', ' ');
+    rname = strrep(rname, '_', ' ');
 end
 
 % Created with NEWFCN.m by Frank Gonzalez-Morphy (frank.gonzalez-morphy@mathworks.de) 

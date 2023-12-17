@@ -21,6 +21,7 @@ arguments
     opts.crv_filename {mustBeFile}
     opts.hct {mustBeText} = "43.75"
     opts.t0_forced {mustBeText} = "47"
+    opts.time_cliff {mustBeText} = "300"
 end
 opts.toi = datetime(opts.toi, TimeZone = "local");
 assert(contains(opts.crv_filename, ".crv"))
@@ -39,6 +40,7 @@ this = mlwong.Ro948Kit( ...
     crv=crv_, ...
     fileprefix=opts.fileprefix, ...
     hct = str2double(opts.hct), ...
-    t0_forced = str2double(opts.t0_forced));
-disp(this)
+    t0_forced = str2double(opts.t0_forced), ...
+    timeCliff = str2double(opts.time_cliff));
+%disp(this)
 call(this)

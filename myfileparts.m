@@ -82,10 +82,10 @@ end
 x = convertCharsToStrings(x);
 try
     % preserve representations of trailing floating-point
-    if ~isempty(str2num(x)) %#ok<ST2NM> 
+    if any(~isempty(str2num(x))) %#ok<ST2NM> 
         fpx = fp + x;
         fp = fpx;
-        x = '';
+        x = "";
     end
 catch ME
     handwarning(ME)

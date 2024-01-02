@@ -1,4 +1,4 @@
-%% SAVEFIGURES saves all open figures as *.fig, *.png to the filesystem.
+%% SAVEFIGURES saves all open figures as *.fig, *.png, *.svg to the filesystem.
 %  Usage:  saveFigures([filesystem_location=pwd][, closeFigure=true][, prefix=''], ...
 %                      [, first_index=1][, ext='.png']) 
 %
@@ -9,8 +9,8 @@
 
 function saveFigures(varargin)
     ip = inputParser;
-    addOptional(ip, 'location', pwd, @ischar);
-    addParameter(ip, 'closeFigure', true, @islogical);
+    addOptional(ip, 'location', pwd, @istext);
+    addParameter(ip, 'closeFigure', false, @islogical);
     addParameter(ip, 'prefix', '', @ischar);
     addParameter(ip, 'first_index', 1, @isscalar);
     addParameter(ip, 'ext', '.png', @istext)

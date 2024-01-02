@@ -14,7 +14,7 @@ function saveFigure2(h, filename, opts)
 
 arguments
     h matlab.ui.Figure = gcf
-    filename {mustBeTextScalar} = "Untitled"
+    filename {mustBeTextScalar} = stackstr(use_underscores=true)
     opts.ext cell = {'.fig', '.png', '.svg'}
     opts.closeFigure logical = false
 end

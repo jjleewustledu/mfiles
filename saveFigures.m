@@ -1,5 +1,5 @@
 %% SAVEFIGURES saves all open figures as *.fig, *.png, *.svg to the filesystem.
-%  Usage:  saveFigures([filesystem_location=pwd][, closeFigure=true][, prefix=''], ...
+%  Usage:  saveFigures([filesystem_location=pwd][, closeFigure=false][, prefix=stackstr(3)], ...
 %                      [, first_index=1][, ext='.png']) 
 %
 %% Version $Revision$ was created $Date$ by $Author$,  
@@ -7,19 +7,17 @@
 %% Developed on Matlab 8.5.0.197613 (R2015a) 
 %% $Id$ 
 
-function saveFigures(varargin)
-    ip = inputParser;
-    addOptional(ip, 'location', pwd, @istext);
-    addParameter(ip, 'closeFigure', false, @islogical);
-    addParameter(ip, 'prefix', '', @ischar);
-    addParameter(ip, 'first_index', 1, @isscalar);
-    addParameter(ip, 'ext', '.png', @istext)
-    parse(ip, varargin{:});
-    ipr = ip.Results;
-
-    pwd0 = pwd;
-    if (~isfolder(ipr.location)); mkdir(ipr.location); end
-    cd(ipr.location);
+function saveFigures(location, opts)
+    arguments
+        location {mustBeTextScalar} = pwd
+        opts.closeFigure logical = false
+        opts.prefix {mustBeTextScalar} = stackstr(3, use_dashes=true)
+        opts.first_index double = 1
+        opts.ext {mustBeTextScalar} = '.png'
+    end
+    ensuredir(location);
+    pwd0 = pushd(location);
+    
     theFigs = get(0, 'children');
     N = numel(theFigs);
     assert(N < 1000, 'saveFigures only supports up to 999 open figures');
@@ -27,22 +25,23 @@ function saveFigures(varargin)
     if 1 == N
         aFig = theFigs(1);
         figure(aFig);
-        saveas(aFig, sprintf('%s%s', ipr.prefix, ipr.ext));
-        saveas(aFig, sprintf('%s.svg', ipr.prefix));  
-        saveas(aFig, sprintf('%s.fig', ipr.prefix));        
-        if (ipr.closeFigure); close(aFig); end
+        saveas(aFig, sprintf('%s%s', opts.prefix, opts.ext));
+        saveas(aFig, sprintf('%s.svg', opts.prefix));  
+        saveas(aFig, sprintf('%s.fig', opts.prefix));        
+        if (opts.closeFigure); close(aFig); end
         return
     end
 
-    for f = ipr.first_index:N
+    for f = opts.first_index:N
         aFig = theFigs(f);
         figure(aFig);
-        saveas(aFig, sprintf('%s%03d%s', ipr.prefix, N-f+ipr.first_index, ipr.ext));
-        saveas(aFig, sprintf('%s%03d.svg', ipr.prefix, N-f+ipr.first_index));   
-        saveas(aFig, sprintf('%s%03d.fig', ipr.prefix, N-f+ipr.first_index));        
-        if (ipr.closeFigure); close(aFig); end
+        saveas(aFig, sprintf('%s%03d%s', opts.prefix, N-f+opts.first_index, opts.ext));
+        saveas(aFig, sprintf('%s%03d.svg', opts.prefix, N-f+opts.first_index));   
+        saveas(aFig, sprintf('%s%03d.fig', opts.prefix, N-f+opts.first_index));        
+        if (opts.closeFigure); close(aFig); end
     end
-    cd(pwd0);
+
+    popd(pwd0);
 end
 
 

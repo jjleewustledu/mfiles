@@ -13,8 +13,18 @@ function paths = mglob(p)
 arguments
     p {mustBeText}
 end
-fc = matlab.buildtool.io.FileCollection.fromPaths(p);
-paths = fc.paths;
+
+try
+    fc = matlab.buildtool.io.FileCollection.fromPaths(p); % maybe unavailable
+    paths = fc.paths;
+    return
+catch ME
+    fprintf("%s: %s\n", stackstr(), ME.message);
+end
+
+fc = glob(convertStringsToChars(p));
+fc = asrow(fc);
+paths = convertCharsToStrings(fc);
 
 % Created with NEWFCN.m by Frank Gonzalez-Morphy (frank.gonzalez-morphy@mathworks.de) 
 % ===== EOF ====== [/Users/jjlee/MATLAB-Drive/mfiles/mglob.m] ======  

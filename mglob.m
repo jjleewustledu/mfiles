@@ -18,8 +18,8 @@ try
     fc = matlab.buildtool.io.FileCollection.fromPaths(p); % maybe unavailable
     paths = fc.paths;
     return
-catch ME
-    fprintf("%s: %s\n", stackstr(), ME.message);
+catch %ME
+    %fprintf("%s: %s\n", stackstr(), ME.message);
 end
 
 fc = glob(convertStringsToChars(p));

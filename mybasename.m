@@ -1,4 +1,4 @@
-function bn = mybasename(str)
+function bn = mybasename(str, opts)
 %% MYBASENAME 
 %  Args:
 %      str (text): represents any filesystem string.
@@ -15,6 +15,11 @@ function bn = mybasename(str)
 %          "filprefix"    "fileprefix"
 %
 %  Developed on Matlab 9.0.0.307022 (R2016a) Prerelease 
+
+arguments
+    str {mustBeTextScalar}
+    opts.withext logical = false
+end
 
 if iscell(str)
     bn = cell(size(str));
@@ -35,7 +40,10 @@ end
 if endsWith(str, filesep)
     str = extractBefore(str, strlength(str));
 end
-[~,bn] = myfileparts(str);
+[~,bn, ext] = myfileparts(str);
+if opts.withext
+    bn = strcat(bn, ext);
+end
 
 % Created with NEWFCN.m by Frank Gonzalez-Morphy (frank.gonzalez-morphy@mathworks.de) 
 % ===== EOF ====== [/Users/jjlee/Local/src/mlcvl/mfiles/mybasename.m] ======  

@@ -9,12 +9,17 @@ function tf = isemptytext(arg)
 %  /Users/jjlee/MATLAB-Drive/mfiles.
 %  Developed on Matlab 9.13.0.2080170 (R2022b) Update 1 for MACI64.  Copyright 2022 John J. Lee.
 
+if isempty(arg)
+    tf = true;
+    return
+end
+
 if ~istext(arg)
     tf = false;
     return
 end
 
-tf = all(arg == "") || isempty(arg);
+tf = all(arg == "");
 
 % Created with NEWFCN.m by Frank Gonzalez-Morphy (frank.gonzalez-morphy@mathworks.de) 
 % ===== EOF ====== [/Users/jjlee/MATLAB-Drive/mfiles/isemptytext.m] ======  

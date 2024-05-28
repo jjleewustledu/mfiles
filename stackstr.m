@@ -5,8 +5,8 @@ function rname = stackstr(stack_index, opts)
 %                                                 3 ~ client of func calling stackstr().
 %                                                 2 ~ func calling stackstr(). 
 %                                                 1 ~ stackstr(). 
-%      opts.use_underscores logical = true : replace {"." "(" ")" "[" "]" "{" "}"} with "_".
-%      opts.use_dashes logical = true : replace {"." "(" ")" "[" "]" "{" "}" "_"} with "-".
+%      opts.use_underscores logical = false : replace {"." "(" ")" "[" "]" "{" "}"} with "_".
+%      opts.use_dashes logical = false : replace {"." "(" ")" "[" "]" "{" "}" "_"} with "-".
 %  Returns:
 %      rname : returned name, e.g., mlpackage_ClientClassName, generated from dbstack()
 %
@@ -21,39 +21,44 @@ arguments
     opts.use_spaces logical = false
 end
 
-dbs = dbstack;
-rname = dbs(min(stack_index, length(dbs))).name;
-if opts.use_underscores
-    rname = strrep(rname, '.', '_');
-    rname = strrep(rname, '(', '_');
-    rname = strrep(rname, ')', '_');
-    rname = strrep(rname, '[', '_');
-    rname = strrep(rname, ']', '_');
-    rname = strrep(rname, '{', '_');
-    rname = strrep(rname, '}', '_');
-    rname = strrep(rname, '%', '_');
-end
-if opts.use_dashes
-    rname = strrep(rname, '.', '-');
-    rname = strrep(rname, '(', '-');
-    rname = strrep(rname, ')', '-');
-    rname = strrep(rname, '[', '-');
-    rname = strrep(rname, ']', '-');
-    rname = strrep(rname, '{', '-');
-    rname = strrep(rname, '}', '-');
-    rname = strrep(rname, '%', '-');
-    rname = strrep(rname, '_', '-');
-end
-if opts.use_dashes
-    rname = strrep(rname, '.', ' ');
-    rname = strrep(rname, '(', ' ');
-    rname = strrep(rname, ')', ' ');
-    rname = strrep(rname, '[', ' ');
-    rname = strrep(rname, ']', ' ');
-    rname = strrep(rname, '{', ' ');
-    rname = strrep(rname, '}', ' ');
-    rname = strrep(rname, '%', ' ');
-    rname = strrep(rname, '_', ' ');
+try
+    dbs = dbstack;
+    rname = dbs(min(stack_index, length(dbs))).name;
+    if opts.use_underscores
+        rname = strrep(rname, '.', '_');
+        rname = strrep(rname, '(', '_');
+        rname = strrep(rname, ')', '_');
+        rname = strrep(rname, '[', '_');
+        rname = strrep(rname, ']', '_');
+        rname = strrep(rname, '{', '_');
+        rname = strrep(rname, '}', '_');
+        rname = strrep(rname, '%', '_');
+    end
+    if opts.use_dashes
+        rname = strrep(rname, '.', '-');
+        rname = strrep(rname, '(', '-');
+        rname = strrep(rname, ')', '-');
+        rname = strrep(rname, '[', '-');
+        rname = strrep(rname, ']', '-');
+        rname = strrep(rname, '{', '-');
+        rname = strrep(rname, '}', '-');
+        rname = strrep(rname, '%', '-');
+        rname = strrep(rname, '_', '-');
+    end
+    if opts.use_dashes
+        rname = strrep(rname, '.', ' ');
+        rname = strrep(rname, '(', ' ');
+        rname = strrep(rname, ')', ' ');
+        rname = strrep(rname, '[', ' ');
+        rname = strrep(rname, ']', ' ');
+        rname = strrep(rname, '{', ' ');
+        rname = strrep(rname, '}', ' ');
+        rname = strrep(rname, '%', ' ');
+        rname = strrep(rname, '_', ' ');
+    end
+catch ME
+    handwarning(ME);
+    rname = 'stackstr';
 end
 
 % Created with NEWFCN.m by Frank Gonzalez-Morphy (frank.gonzalez-morphy@mathworks.de) 

@@ -19,11 +19,19 @@ arguments
     opts.use_underscores logical = true
     opts.use_dashes logical = false
     opts.use_spaces logical = false
+    opts.use_classname logical = true
 end
 
 try
     dbs = dbstack;
     rname = dbs(min(stack_index, length(dbs))).name;
+
+    if ~opts.use_classname
+        if startsWith(rname, "Test_")
+            rname = extractAfter(rname, 5);
+        end
+        rname = regexprep(rname, '^([A-Z][A-Za-z]*).', '');
+    end
     if opts.use_underscores
         rname = strrep(rname, '.', '_');
         rname = strrep(rname, '(', '_');
@@ -45,7 +53,7 @@ try
         rname = strrep(rname, '%', '-');
         rname = strrep(rname, '_', '-');
     end
-    if opts.use_dashes
+    if opts.use_spaces
         rname = strrep(rname, '.', ' ');
         rname = strrep(rname, '(', ' ');
         rname = strrep(rname, ')', ' ');

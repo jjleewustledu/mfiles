@@ -82,10 +82,10 @@ end
 x = convertCharsToStrings(x);
 try
     % preserve representations of trailing floating-point
-    if any(~isempty(str2num(x))) %#ok<ST2NM> 
+    if any(~isnan(str2double(x)))
         fpx = fp + x;
         fp = fpx;
-        x = "";
+        x = strings(size(x));  % empty string array similar to x, e.g., [""; ""; ...]
     end
 catch ME
     handwarning(ME)

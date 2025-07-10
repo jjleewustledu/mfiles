@@ -13,6 +13,9 @@ function [sta, msg, ids] = filesystemOps(op, sources, dest, varargin)
     %% Developed on Matlab 7.11.0.584 (R2010b) 
     %% $Id$ 
 
+    sources = convertStringsToChars(sources);
+    dest = convertStringsToChars(dest);
+
     assert(isa(op, 'function_handle'));
     assert(ischar(sources) || iscell(sources));
     if (ischar(sources)); sources = {sources}; end

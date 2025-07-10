@@ -17,6 +17,7 @@ end
 try
     fc = matlab.buildtool.io.FileCollection.fromPaths(p); % maybe unavailable
     paths = fc.paths;
+    paths = paths(isfile(paths) | isfolder(paths));
     return
 catch %ME
     %fprintf("%s: %s\n", stackstr(), ME.message);

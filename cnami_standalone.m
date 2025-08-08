@@ -14,14 +14,15 @@ function this = cnami_standalone(sesdir, opts)
 
 arguments
     sesdir {mustBeFolder} = pwd
-    opts.final_calc {mustBeFile} 
-    opts.fractions {mustBeFile}
+    opts.final_calc {mustBeFile} % = "chemistry/2024-11-01_Final Calculation.csv"
+    opts.fractions {mustBeFile} % = "chemistry/2024-11-01_VAT_Metabolite_Fractions.csv"
     opts.fileprefix {mustBeTextScalar} = "sub-unknown_ses-unknown"
-    opts.toi {mustBeTextScalar}
-    opts.crv_filename {mustBeFile}
+    opts.toi {mustBeTextScalar} % = "1-Nov-2024 13:25:49"
+    opts.crv_filename {mustBeFile} % = "twilite/EVA_109_20241101_Scan1_D3.crv"
     opts.hct {mustBeText} = "43.75"
     opts.t0_forced {mustBeText} = "47"
     opts.time_cliff {mustBeText} = "300"
+    opts.do_Hill {mustBeText} = "0"
 end
 opts.toi = datetime(opts.toi, TimeZone = "local");
 assert(contains(opts.crv_filename, ".crv"))
@@ -41,6 +42,7 @@ this = mlwong.Ro948Kit( ...
     fileprefix=opts.fileprefix, ...
     hct = str2double(opts.hct), ...
     t0_forced = str2double(opts.t0_forced), ...
-    timeCliff = str2double(opts.time_cliff));
+    timeCliff = str2double(opts.time_cliff), ...
+    do_Hill=str2double(opts.do_Hill));
 %disp(this)
 call(this)

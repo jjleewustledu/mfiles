@@ -1,9 +1,5 @@
-function [s,r] = mysystem(toeval, varargin)
+function [s,r,str] = mysystem(toeval, varargin)
     %% MYSYSTEM wraps the unix shell or Windows cmd.
-    %  Args:
-    %      arg_name (arg_class):  Description of arg.
-    %  Returns:
-    %      returned_name:  Description of returned.
     %
     %  Created 23-Nov-2022 11:52:05 by jjlee in repository
     %  /Users/jjlee/MATLAB-Drive/mfiles.
@@ -13,7 +9,11 @@ function [s,r] = mysystem(toeval, varargin)
         s = 0; r = ''; %#ok<*NASGU>
         switch computer
             case 'GLNXA64'
-                [s,r] = mybash(toeval, varargin{:});
+                if isInParallelWorker()
+                    [s,r] = mybash("~/bin/mlenv.sh " + toeval, varargin{:});
+                else
+                    [s,r] = mybash(toeval, varargin{:});
+                end
             case {'MACI64', 'MACA64'}
                 [s,r] = myzsh(toeval, varargin{:});
             case 'PCWIN64'

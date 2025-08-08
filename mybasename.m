@@ -2,6 +2,8 @@ function bn = mybasename(str, opts)
 %% MYBASENAME 
 %  Args:
 %      str (text): represents any filesystem string.
+%      opts.withext logical = false
+%      opts.withpath logical = false
 %  Returns:
 %      bn: is a basename extracted from str ~ '/path/to/basename.ext'.
 %  Usage:
